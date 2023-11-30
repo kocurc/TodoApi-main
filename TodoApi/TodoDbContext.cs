@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.Common.Todos;
+using TodoApi.Common.Users;
 
-namespace TodoApi;
+namespace TodoApi.Common;
 
 public class TodoDbContext : IdentityDbContext<TodoUser>
 {

@@ -1,3 +1,10 @@
+using TodoApi.Common;
+using TodoApi.Common.Authentication;
+using TodoApi.Common.Authorization;
+using TodoApi.Common.Extensions;
+using TodoApi.Common.Todos;
+using TodoApi.Common.Users;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure auth

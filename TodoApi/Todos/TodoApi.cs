@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.Common.Authorization;
+using TodoApi.Common.Extensions;
+using TodoApi.Common.Filters;
 
-namespace TodoApi;
+namespace TodoApi.Common.Todos;
 
 internal static class TodoApi
 {

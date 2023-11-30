@@ -1,4 +1,4 @@
-﻿namespace Todo.Web.Server;
+﻿namespace TodoApi.Server.Authentication;
 
 public class TokenNames
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace Todo.Web.Server;
+namespace TodoApi.Server.Authentication;
 
 public class ExternalProviders
 {

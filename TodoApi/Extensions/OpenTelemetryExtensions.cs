@@ -4,7 +4,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace TodoApi;
+namespace TodoApi.Common.Extensions;
 
 public static class OpenTelemetryExtensions
 {
