@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi", "TodoApi\TodoApi.csproj", "{8B1F6F88-C84A-4D2F-A648-EDDCA6BD7943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Common", "TodoApi\TodoApi.Common.csproj", "{8B1F6F88-C84A-4D2F-A648-EDDCA6BD7943}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Tests", "TodoApi.Tests\TodoApi.Tests.csproj", "{0A9F94AE-38A9-426D-A643-1F5582544318}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAB2FEF-77C3-4519-AA2E-0CCCDFE1FC13}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TodoApi.Items", "TodoApi.Items", "{7FAB2FEF-77C3-4519-AA2E-0CCCDFE1FC13}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		docker-compose.yml = docker-compose.yml
@@ -15,11 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Web.Server", "Todo.Web\Server\Todo.Web.Server.csproj", "{9459B25A-3A37-43C4-A7DE-6113C1E2CDD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Server", "Todo.Web\Server\TodoApi.Server.csproj", "{9459B25A-3A37-43C4-A7DE-6113C1E2CDD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Web.Client", "Todo.Web\Client\Todo.Web.Client.csproj", "{699CCBA9-9DE8-48C3-9D2F-226E349C9253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Client", "Todo.Web\Client\TodoApi.Client.csproj", "{699CCBA9-9DE8-48C3-9D2F-226E349C9253}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Web.Shared", "Todo.Web\Shared\Todo.Web.Shared.csproj", "{272942F6-94E8-4D6B-8AD8-C4CCA305836D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Shared", "Todo.Web\Shared\TodoApi.Shared.csproj", "{272942F6-94E8-4D6B-8AD8-C4CCA305836D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApi.DevOps", "DevOps\TodoApi.DevOps.csproj", "{8A7FD9E2-CDCA-4546-9093-75260C964B4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{272942F6-94E8-4D6B-8AD8-C4CCA305836D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{272942F6-94E8-4D6B-8AD8-C4CCA305836D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{272942F6-94E8-4D6B-8AD8-C4CCA305836D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A7FD9E2-CDCA-4546-9093-75260C964B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A7FD9E2-CDCA-4546-9093-75260C964B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A7FD9E2-CDCA-4546-9093-75260C964B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A7FD9E2-CDCA-4546-9093-75260C964B4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

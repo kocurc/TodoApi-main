@@ -1,4 +1,6 @@
-﻿namespace Todo.Web.Server;
+﻿using TodoApi.Shared;
+
+namespace TodoApi.Server;
 
 public class AuthClient
 {

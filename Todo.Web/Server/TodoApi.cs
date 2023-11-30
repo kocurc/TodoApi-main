@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using TodoApi.Server.Authentication;
 using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
-namespace Todo.Web.Server;
+namespace TodoApi.Server;
 
 public static class TodoApi
 {

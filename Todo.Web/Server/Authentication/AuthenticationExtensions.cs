@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
-namespace Todo.Web.Server;
+namespace TodoApi.Server.Authentication;
 
 public static class AuthenticationExtensions
 {

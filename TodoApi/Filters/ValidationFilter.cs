@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.Metadata;
 using MiniValidation;
 
-namespace TodoApi;
+namespace TodoApi.Common.Filters;
 
 public static class ValidationFilterExtensions
 {
