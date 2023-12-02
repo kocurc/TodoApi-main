@@ -1,6 +1,4 @@
-﻿using TodoApi.Common.Users;
-
-namespace TodoApi.Tests;
+﻿namespace TodoApi.Tests;
 
 public class UserApiTests
 {

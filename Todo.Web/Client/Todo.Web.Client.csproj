@@ -6,7 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\TodoApi.Shared.csproj" />
+    <ProjectReference Include="..\Shared\Todo.Web.Shared.csproj" />
   </ItemGroup>
 
 </Project>

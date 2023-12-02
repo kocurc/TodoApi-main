@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
-namespace TodoApi.Common.Extensions;
+namespace TodoApi;
 
 public static class OpenApiExtensions
 {

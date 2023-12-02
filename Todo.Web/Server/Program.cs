@@ -1,5 +1,4 @@
-using TodoApi.Server;
-using TodoApi.Server.Authentication;
+using Todo.Web.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 

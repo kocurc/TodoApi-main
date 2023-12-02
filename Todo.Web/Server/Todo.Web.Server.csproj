@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\TodoApi.Client.csproj" />
-    <ProjectReference Include="..\Shared\TodoApi.Shared.csproj" />
+    <ProjectReference Include="..\Client\Todo.Web.Client.csproj" />
+    <ProjectReference Include="..\Shared\Todo.Web.Shared.csproj" />
   </ItemGroup>
 
 </Project>

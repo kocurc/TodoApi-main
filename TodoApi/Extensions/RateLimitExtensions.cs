@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Threading.RateLimiting;
 
-namespace TodoApi.Common.Extensions;
+namespace TodoApi;
 
 public static class RateLimitExtensions
 {

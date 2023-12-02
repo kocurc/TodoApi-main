@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
-using TodoApi.Shared;
+using Todo.Web.Shared;
 
-namespace TodoApi.Client;
+namespace Todo.Web.Client;
 
 public class TodoClient
 {

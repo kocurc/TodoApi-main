@@ -1,5 +1,5 @@
 ﻿@page
-@model TodoApi.Server.Pages.IndexModel
+@model Todo.Web.Server.Pages.IndexModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -19,7 +19,7 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-            <component type="typeof(TodoApi.Client.TodoApp)" 
+            <component type="typeof(Todo.Web.Client.TodoApp)" 
                        param-CurrentUser="@Model.CurrentUserName"
                        param-SocialProviders="@Model.ProviderNames" 
                        render-mode="WebAssembly" />

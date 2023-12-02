@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TodoApi.Server.Authentication;
 
-namespace TodoApi.Server.Pages;
+namespace Todo.Web.Server.Pages;
 
 public class IndexModel : PageModel
 {

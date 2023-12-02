@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace TodoApi.Common.Authorization;
+namespace TodoApi;
 
 public static class AuthorizationHandlerExtensions
 {
