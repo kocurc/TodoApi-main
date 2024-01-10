@@ -1,0 +1,11 @@
+{
+   "tasks": 
+   [
+      {
+        "name": "gitleaks",
+        "group": "pre-commit",
+        "command": "powershell",
+        "args": [ "format" ]
+      }
+   ]
+}
