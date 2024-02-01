@@ -1,16 +1,18 @@
 name: Semgrep SAST scan
+run-name: Called by ${{ github.actor }}
 
 on:
   workflow_run:
-    workflows: ["Main forkflow"]
+    workflows: [ "Main forkflow" ]
     types:
       - completed
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
+  
   semgrep:
     name: semgrep/ci
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
