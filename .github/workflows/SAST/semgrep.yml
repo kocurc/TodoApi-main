@@ -1,19 +1,31 @@
+name: Semgrep SAST scan
+
+#on:
+  #workflow_dispatch: {}
+  #pull_request:
+    #push:
+      #branches:
+      #- master
+      #paths:
+      #- .github/workflows/SAST/semgrep.yml
+    #types:
+      #- opened
 on:
-  workflow_dispatch: {}
-  pull_request: {}
-  push:
-    branches:
-    - master
-    paths:
-    - .github/workflows/SAST/semgrep.yml
+  workflow_run:
+    workflows: ["Main forkflow"]
+    types:
+      - completed
+  
   schedule:
-  # random HH:MM to avoid a load spike on GitHub Actions at 00:00
-  - cron: 4 13 * * *
-name: Semgrep
+  - cron: 00 01 * * *
+
 jobs:
   semgrep:
     name: semgrep/ci
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     env:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     container:
