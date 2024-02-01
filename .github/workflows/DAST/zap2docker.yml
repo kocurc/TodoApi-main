@@ -1,0 +1,25 @@
+name: zap2docker DAST scan
+run-name: Called by ${{ github.actor }}
+
+on:
+  workflow_run:
+    workflows: [ "Main forkflow" ]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  
+  semgrep:
+    name: semgrep/ci
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    container:
+      image: returntocorp/semgrep
+    steps:
+    - uses: actions/checkout@v3
+    - run: semgrep ci
