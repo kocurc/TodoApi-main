@@ -36,7 +36,7 @@ jobs:
 
     - name: List files in the root
       run: |
-        ls $ {{ github.workspace }}
+        ls ${{ github.workspace }}
  
     - name: Build solution
       run: dotnet build TodoApi.sln --configuration Release
