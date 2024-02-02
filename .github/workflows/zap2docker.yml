@@ -12,6 +12,7 @@ on:
 jobs:
 
   build-and-run-application:
+
     name: Buil and run application
     runs-on: ubuntu-latest
     defaults:
@@ -41,6 +42,7 @@ jobs:
         working-directory: ./TodoApi/
 
   zap2docker-api-scan:
+    
     needs: build-and-run-application
     name: API scan
     runs-on: ubuntu-latest
