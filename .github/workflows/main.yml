@@ -2,9 +2,11 @@ name: Main forkflow
 run-name: Called by ${{ github.actor }}
 
 on:
+
   push:
     branches:
       - 'dev/**'
+      
   pull_request:
     types:
       - opened
@@ -12,11 +14,15 @@ on:
 jobs:
 
   build-and-test-solution:
+
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest]
+
     steps:
+
     - name: Print the job trigger
       run: echo "The job was triggered by ${{ github.event_name }}"
       
