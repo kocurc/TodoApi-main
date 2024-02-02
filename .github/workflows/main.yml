@@ -49,8 +49,8 @@ jobs:
     - name: Test solution
       run: dotnet test TodoApi.sln --configuration Release --no-build
 
-    - name: Use local Metadata action
-      uses: ./.github/actions/metadata/action.yml
+    #- name: Use local Metadata action
+      #uses: ./.github/actions/metadata/action.yml
 
     - name: Add executable permissions to local file
       run: |
