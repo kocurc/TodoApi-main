@@ -24,6 +24,11 @@ jobs:
   
       - name: Build solution
         run: dotnet build TodoApi.sln --configuration Release
+
+      - name: Download a file
+        uses: actions/download-artifact@v4
+        with:
+          name: out-file
   
       - name: Start Todo.Web.Server project
         run: dotnet run --project Todo.Web.Server.csproj --configuration Release
