@@ -24,6 +24,8 @@ jobs:
   
       - name: Start Todo.Web.Server project
         run: dotnet run --project ./Todo.Web/Server/Todo.Web.Server.csproj --configuration Release
+        env:
+          TODO_API_PORT: 8081
       
       - name: Start TodoApi project
         run: dotnet run --project ./TodoApi/TodoApi.csproj --configuration Release
