@@ -2,6 +2,7 @@ name: zap2docker DAST scan
 run-name: Called by ${{ github.actor }}
 
 on:
+  
   workflow_run:
     workflows: [ "Main forkflow" ]
     types:
@@ -9,6 +10,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
+
   build-and-run-application:
     name: Buil and run application
     runs-on: ubuntu-latest
@@ -20,10 +22,10 @@ jobs:
         run: dotnet build TodoApi.sln --configuration Release
   
       - name: Start Todo.Web.Server project
-        run: dotnet run --project Todo.Web.Server --configuration Release
+        run: dotnet run --project .\Todo.Web\Server\Todo.Web.Server.csproj --configuration Release
       
       - name: Start TodoApi project
-        run: dotnet run --project TodoApi --configuration Release
+        run: dotnet run --project .\TodoApi\TodoApi.csproj --configuration Release
 
   zap2docker-api-scan:
     needs: build-and-run-application
