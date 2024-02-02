@@ -44,5 +44,8 @@ jobs:
     - name: Test solution
       run: dotnet test TodoApi.sln --configuration Release --no-build
 
+    - name: Use local Metadata action
+      uses: ./.github/actions/metadata/metadata.yml
+
     - name: Print job status
       run: echo "The job's status is ${{ job.status }}"
