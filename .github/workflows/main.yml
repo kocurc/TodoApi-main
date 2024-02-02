@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - 'dev/**'
-      
+
   pull_request:
     types:
       - opened
@@ -53,5 +53,10 @@ jobs:
     - name: Use local Metadata action
       uses: ./.github/actions/metadata/metadata.yml
 
+    - name: Add executable permissions to local file
+      run: |
+        chmod +x ./scripts/test.sh
+        ./scripts/test.sh
+        
     - name: Print job status
       run: echo "The job's status is ${{ job.status }}"
