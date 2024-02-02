@@ -31,13 +31,13 @@ jobs:
           name: out-file
   
       - name: Start Todo.Web.Server project
-        run: dotnet run --project Todo.Web.Server.csproj --configuration Release
+        run: dotnet run --project Todo.Web.Server.csproj --configuration Release &
         working-directory: ./Todo.Web/Server/
         env:
           TODO_API_PORT: 8081
       
       - name: Start TodoApi project
-        run: dotnet run --project TodoApi.csproj --configuration Release
+        run: dotnet run --project TodoApi.csproj --configuration Release &
         working-directory: ./TodoApi/
 
   zap2docker-api-scan:
