@@ -50,6 +50,7 @@ jobs:
       #image: owasp/zap2docker-stable
       
     steps:
+      
     - name: Start TodoApi project
       run: |
         docker pull owasp/zap2docker-stable
