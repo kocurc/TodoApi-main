@@ -50,4 +50,4 @@ jobs:
       image: owasp/zap2docker-stable
     steps:
     - name: Start TodoApi project
-      run: zap-api-scan.py -t https://localhost:5001/swagger/v1/swagger.json-f openapi
+      run: zap-api-scan.py -t https://localhost:5001/swagger/v1/swagger.json -f openapi
