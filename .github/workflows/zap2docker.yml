@@ -53,6 +53,7 @@ jobs:
 
     - name: Start TodoApi project
       continue-on-error: true
+      # Deploy to Azure and test on a production
       run: |
         docker pull owasp/zap2docker-stable
         docker run --tty owasp/zap2docker-stable zap-api-scan.py -t https://api.szpek.pl/swagger/v1/swagger.json -f openapi
