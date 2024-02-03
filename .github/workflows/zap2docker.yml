@@ -46,8 +46,8 @@ jobs:
     needs: build-and-run-application
     name: API scan
     runs-on: ubuntu-latest
-    container:
-      image: owasp/zap2docker-stable
+    #container:
+      #image: owasp/zap2docker-stable
     steps:
     - name: Start TodoApi project
-      run: zap-api-scan.py -t https://localhost:5001/swagger/v1/swagger.json -f openapi
+      run: docker run --tty owasp/zap2docker-stable zap-api-scan.py -t https://api.szpek.pl/swagger/v1/swagger.json -f openapi
