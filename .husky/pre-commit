@@ -1,6 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo 'Format cs files'
 dotnet husky run --name dotnet-format-staged-files
 
+echo 'Build solution'
 dotnet build --no-restore
