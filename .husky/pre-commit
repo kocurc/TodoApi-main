@@ -1,14 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-## husky task runner examples -------------------
-## Note : for local installation use 'dotnet' prefix. e.g. 'dotnet husky'
+dotnet husky run --name dotnet-format-staged-files
 
-## run all tasks
-#husky run
-
-### run all tasks with group: 'group-name'
-#husky run --group group-name
-
-## run task with name: 'task-name'
-#husky run --name task-name
+dotnet build --no-restore

@@ -1,11 +1,12 @@
 {
-   "tasks": 
-   [
-      {
-        "name": "gitleaks",
-        "group": "pre-commit",
-        "command": "powershell",
-        "args": [ "format" ]
-      }
-   ]
+	"tasks": 
+	[
+		{
+			"name": "dotnet-format-staged-files",
+			"group": "pre-commit-operations",
+			"command": "dotnet",
+			"args": ["format", "--include", "${staged}", "verbosity", "detailed"],
+			"include": ["**/*.cs"]
+		}
+	]
 }
