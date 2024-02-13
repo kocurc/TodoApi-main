@@ -44,7 +44,7 @@ jobs:
     steps:
 
     - name: Start DAST scan
-      continue-on-error: true
+      continue-on-error: false
       run: |
-        apt install wapiti
+        sudo apt install wapiti
         wapiti --module all --url https://localhost:7123/ --verbose 2
