@@ -41,7 +41,7 @@ jobs:
           ifconfig
           netstat --tcp --udp --listening
           sudo apt install wapiti
-          wapiti --module all --url https://localhost:7123/ --verbose 2
+          wapiti --module all --url http://0.0.0.0:5147 --verbose 2
 
   #wapiti-dynamic-vulnerabilities-scan:
 
