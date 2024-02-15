@@ -35,18 +35,26 @@ jobs:
         run: dotnet run --project TodoApi.csproj --configuration Release &
         working-directory: ./TodoApi/
 
-  wapiti-dynamic-vulnerabilities-scan:
+      - name: Start DAST scan
+        continue-on-error: false
+        run: |
+          ifconfig
+          netstat --tcp --udp --listening
+          sudo apt install wapiti
+          wapiti --module all --url https://localhost:7123/ --verbose 2
 
-    needs: build-and-run-application
-    name: DAST scan
-    runs-on: ubuntu-latest
+  #wapiti-dynamic-vulnerabilities-scan:
 
-    steps:
+    #needs: build-and-run-application
+    #name: DAST scan
+    #runs-on: ubuntu-latest
 
-    - name: Start DAST scan
-      continue-on-error: false
-      run: |
-        ifconfig
-        netstat --tcp --udp --listening
-        sudo apt install wapiti
-        wapiti --module all --url https://localhost:7123/ --verbose 2
+    #steps:
+
+    #- name: Start DAST scan
+      #continue-on-error: false
+      #run: |
+        #ifconfig
+        #netstat --tcp --udp --listening
+        #sudo apt install wapiti
+        #wapiti --module all --url https://localhost:7123/ --verbose 2
