@@ -46,5 +46,7 @@ jobs:
     - name: Start DAST scan
       continue-on-error: false
       run: |
+        ifconfig
+        netstat --tcp --udp --listening
         sudo apt install wapiti
         wapiti --module all --url https://localhost:7123/ --verbose 2
