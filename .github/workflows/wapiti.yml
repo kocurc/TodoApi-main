@@ -45,7 +45,7 @@ jobs:
         id: find-report
         run: |
           # Find wapiti HTML report
-          HTML_FILE=$(find /home/runner/.wapiti/generated_report/ -type f -name "*.html" -print -quit)
+          HTML_FILE=$(find /home/runner/.wapiti/generated_report/ -type f -name "0.0.0.0_5147_*.html" -print -quit)
           # ::set-output sets output variable within step
           echo "::set-output name=report-path::$HTML_FILE"
 
