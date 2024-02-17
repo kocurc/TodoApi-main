@@ -38,23 +38,19 @@ jobs:
       - name: Start DAST scan
         continue-on-error: false
         run: |
-          ifconfig
-          netstat --tcp --udp --listening
           sudo apt install wapiti
           wapiti --module all --url http://0.0.0.0:5147 --verbose 2
 
-  #wapiti-dynamic-vulnerabilities-scan:
+      - name: Find wapiti HTML report
+        id: find-report
+        run: |
+          # Find wapiti HTML report
+          HTML_FILE=$(find /home/runner/.wapiti/generated_report/ -type f -name "*.html" -print -quit)
+          # ::set-output sets output variable within step
+          echo "::set-output name=report-path::$HTML_FILE"
 
-    #needs: build-and-run-application
-    #name: DAST scan
-    #runs-on: ubuntu-latest
-
-    #steps:
-
-    #- name: Start DAST scan
-      #continue-on-error: false
-      #run: |
-        #ifconfig
-        #netstat --tcp --udp --listening
-        #sudo apt install wapiti
-        #wapiti --module all --url https://localhost:7123/ --verbose 2
+      - name: Archive wapiti DAST HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: wapiti-dast-html-report
+          path: ${{ steps.find-report.outputs.report-path }}
