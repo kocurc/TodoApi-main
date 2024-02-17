@@ -51,21 +51,3 @@ jobs:
 
     #- name: Use local Metadata action
       #uses: ./.github/actions/metadata/action.yml
-
-    - name: Add executable permissions to local file
-      run: |
-        chmod +x ./scripts/test.sh
-        ./scripts/test.sh
-
-    - name: Print job status
-      run: echo "The job's status is ${{ job.status }}"
-
-    - shell: bash
-      run: |
-        echo "Test" > out.txt
-
-    - name: Upload a file
-      uses: actions/upload-artifact@v4
-      with:
-          name: out-file
-          path: out.txt
