@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace Todo.Web.Server;
+namespace Todo.Web.Server.Authentication;
 
 public class ExternalProviders
 {
@@ -28,7 +28,7 @@ public class ExternalProviders
         {
             // We're assuming all schemes that aren't cookies are social
             if (s.Name == CookieAuthenticationDefaults.AuthenticationScheme ||
-                s.Name == AuthenticatonSchemes.ExternalScheme)
+                s.Name == AuthenticationSchemes.ExternalScheme)
             {
                 continue;
             }

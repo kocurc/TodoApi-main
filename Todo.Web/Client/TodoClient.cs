@@ -1,15 +1,19 @@
 using System.Net;
 using System.Net.Http.Json;
+using Ganss.Xss;
 using Todo.Web.Shared;
 
 namespace Todo.Web.Client;
 
 public class TodoClient
 {
-    private readonly HttpClient _client;
-    public TodoClient(HttpClient client)
+    private readonly HttpClient _httpClient;
+    private readonly HtmlSanitizer _htmlSanitizer;
+
+    public TodoClient(HttpClient httpClient, HtmlSanitizer htmlSanitizer)
     {
-        _client = client;
+        _httpClient = httpClient;
+        _htmlSanitizer = htmlSanitizer;
     }
 
     public async Task<TodoItem?> AddTodoAsync(string? title)
@@ -21,7 +25,7 @@ public class TodoClient
 
         TodoItem? createdTodo = null;
 
-        var response = await _client.PostAsJsonAsync("todos", new TodoItem { Title = title });
+        var response = await _httpClient.PostAsJsonAsync("todos", new TodoItem { Title = title });
 
         if (response.IsSuccessStatusCode)
         {
@@ -33,13 +37,14 @@ public class TodoClient
 
     public async Task<bool> DeleteTodoAsync(int id)
     {
-        var response = await _client.DeleteAsync($"todos/{id}");
+        var response = await _httpClient.DeleteAsync($"todos/{id}");
+
         return response.IsSuccessStatusCode;
     }
 
     public async Task<(HttpStatusCode, List<TodoItem>?)> GetTodosAsync()
     {
-        var response = await _client.GetAsync("todos");
+        var response = await _httpClient.GetAsync("todos");
         var statusCode = response.StatusCode;
         List<TodoItem>? todos = null;
 
@@ -51,14 +56,18 @@ public class TodoClient
         return (statusCode, todos);
     }
 
-    public async Task<bool> LoginAsync(string? username, string? password)
+    public async Task<bool> LoginAsync(string? userName, string? password)
     {
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
         {
             return false;
         }
 
-        var response = await _client.PostAsJsonAsync("auth/login", new UserInfo { Username = username, Password = password });
+        var sanitizedUserName = _htmlSanitizer.Sanitize(userName);
+        var sanitizedPassword = _htmlSanitizer.Sanitize(password);
+        var userInfo = new UserInfo() { Username = sanitizedUserName, Password = sanitizedPassword };
+        var response = await _httpClient.PostAsJsonAsync("auth/login", userInfo);
+
         return response.IsSuccessStatusCode;
     }
 
@@ -69,13 +78,13 @@ public class TodoClient
             return false;
         }
 
-        var response = await _client.PostAsJsonAsync("auth/register", new UserInfo { Username = username, Password = password });
+        var response = await _httpClient.PostAsJsonAsync("auth/register", new UserInfo { Username = username, Password = password });
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> LogoutAsync()
     {
-        var response = await _client.PostAsync("auth/logout", content: null);
+        var response = await _httpClient.PostAsync("auth/logout", content: null);
         return response.IsSuccessStatusCode;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace TodoApi.Tests;
+﻿using TodoApi.Authentication;
+
+namespace TodoApi.Tests;
 
 internal class TodoApplication : WebApplicationFactory<Program>
 {

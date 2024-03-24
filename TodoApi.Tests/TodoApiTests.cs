@@ -1,3 +1,5 @@
+using TodoApi.Todos;
+
 namespace TodoApi.Tests;
 
 public class TodoApiTests
@@ -11,7 +13,7 @@ public class TodoApiTests
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo { Title = "Thing one I have to do", OwnerId = userId });
+        db.Todos.Add(new Todos.Todo { Title = "Thing one I have to do", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -67,7 +69,7 @@ public class TodoApiTests
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -97,7 +99,7 @@ public class TodoApiTests
         await application.CreateUserAsync(userId0);
         await application.CreateUserAsync(userId1);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
 
         await db.SaveChangesAsync();
 
@@ -155,7 +157,7 @@ public class TodoApiTests
         await application.CreateUserAsync(userId0);
         await application.CreateUserAsync(userId1);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
 
         await db.SaveChangesAsync();
 
@@ -191,7 +193,7 @@ public class TodoApiTests
         await application.CreateUserAsync(userId);
         await application.CreateUserAsync(adminUserId);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -227,7 +229,7 @@ public class TodoApiTests
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = ownerId });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = ownerId });
 
         await db.SaveChangesAsync();
 
@@ -271,7 +273,7 @@ public class TodoApiTests
         await application.CreateUserAsync(userId);
         await application.CreateUserAsync(adminUserId);
 
-        db.Todos.Add(new Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 

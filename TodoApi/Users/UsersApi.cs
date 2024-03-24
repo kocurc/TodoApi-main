@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using TodoApi.Authentication;
 
-namespace TodoApi;
+namespace TodoApi.Users;
 
 public static class UsersApi
 {
