@@ -13,6 +13,7 @@ builder.Services.AddRazorPages();
 // Add the forwarder to make sending requests to the backend easier
 builder.Services.AddHttpForwarder();
 
+// Configure the HttpClient for the backend API
 var todoUrl = builder.Configuration.GetServiceUri("todoapi")?.ToString() ??
               builder.Configuration["TodoApiUrl"] ??
               throw new InvalidOperationException("Todo API URL is not configured");
