@@ -25,13 +25,13 @@
     }
 </div>
 
-@if (!string.IsNullOrEmpty(alertMessage))
+@if (!string.IsNullOrEmpty(_alertMessage))
 {
-    <div class="alert alert-danger">@alertMessage</div>
+    <div class="alert alert-danger">@_alertMessage</div>
 }
 
 @code {
-    string? alertMessage;
+    string? _alertMessage;
 
     [Required]
     [StringLength(15)] 
@@ -52,27 +52,28 @@
 
     async Task Login()
     {
-        alertMessage = null;
+        _alertMessage = null;
+
         if (await Client.LoginAsync(Username, Password))
         {
             await OnLoggedIn.InvokeAsync(Username);
         }
         else
         {
-            alertMessage = "Login failed";
+            _alertMessage = "Login failed";
         }
     }
 
     async Task Create()
     {
-        alertMessage = null;
+        _alertMessage = null;
         if (await Client.CreateUserAsync(Username, Password))
         {
             await OnLoggedIn.InvokeAsync(Username);
         }
         else
         {
-            alertMessage = "Failed to create user";
+            _alertMessage = "Failed to create user";
         }
     }
 }

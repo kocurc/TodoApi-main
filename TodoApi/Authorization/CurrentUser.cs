@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace TodoApi;
+namespace TodoApi.Authorization;
 
 // A scoped service that exposes the current user information
 public class CurrentUser

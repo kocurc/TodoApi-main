@@ -1,4 +1,4 @@
-﻿namespace TodoApi;
+﻿namespace TodoApi.Authentication;
 
 public static class AuthenticationExtensions
 {

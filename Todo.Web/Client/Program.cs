@@ -1,3 +1,4 @@
+using Ganss.Xss;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Todo.Web.Client;
 
@@ -11,5 +12,6 @@ builder.Services.AddHttpClient<TodoClient>(client =>
     // requests
     client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
 });
+builder.Services.AddSingleton<HtmlSanitizer>();
 
 await builder.Build().RunAsync();

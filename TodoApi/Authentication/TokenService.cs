@@ -1,12 +1,11 @@
-﻿using System.Data;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TodoApi;
+namespace TodoApi.Authentication;
 
 public static class AuthenticationServiceExtensions
 {
