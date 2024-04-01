@@ -1,26 +1,17 @@
 name: wapiti DAST scan
-run-name: Called by ${{ github.actor }}
 
 on:
-  
-  workflow_run:
-    workflows: [ "Main forkflow" ]
-    types:
-      - completed
   workflow_dispatch: {}
 
 jobs:
 
   build-and-run-application:
-
     name: Buil and run application
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./
-        
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
   
