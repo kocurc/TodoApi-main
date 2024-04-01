@@ -1,10 +1,10 @@
 name: Main forkflow
 
 on:
-
   push:
     branches:
       - 'dev/**'
+      - 'devsecops/**'
   pull_request:
     types:
       - opened
