@@ -1,5 +1,4 @@
 name: Main forkflow
-run-name: Called by ${{ github.actor }}
 
 on:
 

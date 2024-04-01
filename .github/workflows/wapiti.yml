@@ -1,5 +1,4 @@
 name: wapiti DAST scan
-run-name: Called by ${{ github.actor }}
 
 on:
   
