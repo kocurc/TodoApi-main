@@ -10,17 +10,12 @@ on:
       - opened
 
 jobs:
-
   build-and-test-solution:
-
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest]
-
     steps:
-
     - name: Print the job trigger
       run: echo "The job was triggered by ${{ github.event_name }}"
       
@@ -47,6 +42,3 @@ jobs:
 
     - name: Test solution
       run: dotnet test TodoApi.sln --configuration Release --no-build
-
-    #- name: Use local Metadata action
-      #uses: ./.github/actions/metadata/action.yml
