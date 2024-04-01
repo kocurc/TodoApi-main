@@ -1,11 +1,6 @@
 name: wapiti DAST scan
 
 on:
-  
-  workflow_run:
-    workflows: [ "Main forkflow" ]
-    types:
-      - completed
   workflow_dispatch: {}
 
 jobs:

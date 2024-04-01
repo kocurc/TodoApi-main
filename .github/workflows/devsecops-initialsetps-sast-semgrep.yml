@@ -1,8 +1,8 @@
-name: Semgrep SAST scan
+name: Static Application Securiry Test (SAST) Semgrep
 
 on:
   workflow_run:
-    workflows: [ "Main forkflow" ]
+    workflows: [ "Development main workflow" ]
     types:
       - completed
   workflow_dispatch:
