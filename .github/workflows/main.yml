@@ -2,12 +2,7 @@ name: Development main workflow
 
 on:
   push:
-    branches:
-      - 'dev/**'
-      - 'devsecops/**'
-  pull_request:
-    types:
-      - opened
+  workflow_dispatch:
 
 jobs:
   build-and-test-solution:
