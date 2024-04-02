@@ -2,14 +2,14 @@ name: Static Application Securiry Test (SAST) Semgrep
 
 on:
   workflow_run:
-    workflows: [ "Development main workflow" ]
+    workflows: ["Software Composition Analysis (SCA) - Snyk"]
     types:
       - completed
   workflow_dispatch:
 
 jobs:
-  semgrep:
-    name: semgrep/ci
+  sast:
+    name: semgrep
     runs-on: ubuntu-latest
     env:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
