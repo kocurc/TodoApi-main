@@ -11,17 +11,14 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@master
-      - run: |
-          ls /home/runner/work/TodoApi-main
-          ls /home/runner/work/TodoApi-main/TodoApi-main
+      - run: ls /home/runner/work/TodoApi-main/TodoApi-main
       - name: Setup .NET
         uses: actions/setup-dotnet@master
       - name: Restore dependencies
-        run: |
-          ls /home/runner/work/TodoApi-main/TodoApi-mai
-          ls /home/runner/work/TodoApi-main
-          dotnet restore ./TodoApi.sln
+        run: dotnet restore ./TodoApi.sln
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=TodoApi.sln
