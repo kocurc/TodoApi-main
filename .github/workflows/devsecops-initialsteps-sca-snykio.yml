@@ -2,15 +2,22 @@ name: Software Composition Analysis (SCA) - Snyk
 
 on:
   workflow_run:
-    workflows: ["Development main workflow"]
-    types:
-      - completed
+    workflows: ["Secret Scanning Gitleaks"]
+    types: completed
 
 jobs:
   snyk:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@master
+      - run: ls /home/runner/work/TodoApi-main/TodoApi-main
+      - name: Setup .NET
+        uses: actions/setup-dotnet@master
+      - name: Restore dependencies
+        run: |
+          ls /home/runner/work/TodoApi-main/TodoApi-mai
+          dotnet restore ./TodoApi.sln
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         env:

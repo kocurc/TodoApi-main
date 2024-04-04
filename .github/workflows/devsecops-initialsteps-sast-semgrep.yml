@@ -2,9 +2,8 @@ name: Static Application Securiry Test (SAST) Semgrep
 
 on:
   workflow_run:
-    workflows: ["Software Composition Analysis (SCA) - Snyk"]
-    types:
-      - completed
+    workflows: ["Development main workflow"]
+    types: completed
 
 jobs:
   sast:
