@@ -1,7 +1,8 @@
 name: Development main workflow
 
 on:
-  push:
+  pull_request:
+    types: opened
   workflow_dispatch:
 
 jobs:
