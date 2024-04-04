@@ -3,11 +3,11 @@ name: Software Composition Analysis (SCA) - Snyk
 on:
   workflow_run:
     workflows: ["Development main workflow"]
-    types:
-      - completed
+    types: completed
 
 jobs:
   snyk:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
