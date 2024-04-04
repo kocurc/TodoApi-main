@@ -2,7 +2,7 @@ name: Static Application Securiry Test (SAST) Semgrep
 
 on:
   workflow_run:
-    workflows: ["Software Composition Analysis (SCA) - Snyk"]
+    workflows: ["Development main workflow"]
     types: completed
 
 jobs:
@@ -13,7 +13,6 @@ jobs:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     container:
       image: returntocorp/semgrep
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - uses: actions/checkout@v3
     - run: semgrep ci
