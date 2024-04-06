@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["Secret Scanning Gitleaks"]
     types: completed
+  workflow_dispatch:
 
 jobs:
   snyk:
