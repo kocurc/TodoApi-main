@@ -12,12 +12,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     steps:
-    - name: Print the job trigger
-      run: echo "The job was triggered by ${{ github.event_name }}"
-      
-    - name: Print operation system
-      run: echo "Operation system is ${{ runner.os }} in architecture ${{ runner.arch }}"
-
     - name: Print checkout information
       run: echo "Checkout of a repository ${{ github.repository }} and branch ${{ github.ref }}"
     
@@ -29,10 +23,6 @@ jobs:
       with:
         dotnet-version: '8.0'
 
-    - name: List files in the root
-      run: |
-        ls ${{ github.workspace }}
- 
     - name: Build solution
       run: dotnet build TodoApi.sln --configuration Release
 
