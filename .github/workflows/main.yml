@@ -7,13 +7,8 @@ on:
 
 jobs:
   build-and-test-solution:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
-    - name: Print checkout information
-      run: echo "Checkout of a repository ${{ github.repository }} and branch ${{ github.ref }}"
     
     - name: Checkout solution code
       uses: actions/checkout@v4
