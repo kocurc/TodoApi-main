@@ -25,7 +25,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.EventCounters" Version="1.5.1-alpha.1" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EventCounters" />
   </ItemGroup>
 
   <ItemGroup>
