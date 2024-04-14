@@ -1,10 +1,9 @@
-﻿using OpenTelemetry;
-using OpenTelemetry.Logs;
+﻿using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-namespace TodoApi;
+namespace TodoApi.Extensions;
 
 public static class OpenTelemetryExtensions
 {
@@ -37,21 +36,21 @@ public static class OpenTelemetryExtensions
             .WithMetrics(metrics =>
             {
                 metrics.SetResourceBuilder(resourceBuilder)
-                       .AddPrometheusExporter()
-                       .AddAspNetCoreInstrumentation()
-                       .AddRuntimeInstrumentation()
-                       .AddHttpClientInstrumentation()
-                       .AddEventCountersInstrumentation(c =>
-                       {
-                           // https://learn.microsoft.com/en-us/dotnet/core/diagnostics/available-counters
-                           c.AddEventSources(
-                               "Microsoft.AspNetCore.Hosting",
-                               "Microsoft-AspNetCore-Server-Kestrel",
-                               "System.Net.Http",
-                               "System.Net.Sockets",
-                               "System.Net.NameResolution",
-                               "System.Net.Security");
-                       });
+                    .AddPrometheusExporter()
+                    .AddAspNetCoreInstrumentation()
+                    .AddRuntimeInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddEventCountersInstrumentation(c =>
+                    {
+                        // https://learn.microsoft.com/en-us/dotnet/core/diagnostics/available-counters
+                        c.AddEventSources(
+                            "Microsoft.AspNetCore.Hosting",
+                            "Microsoft-AspNetCore-Server-Kestrel",
+                            "System.Net.Http",
+                            "System.Net.Sockets",
+                            "System.Net.NameResolution",
+                            "System.Net.Security");
+                    });
             })
             .WithTracing(tracing =>
             {
@@ -59,17 +58,16 @@ public static class OpenTelemetryExtensions
                 // from Todo.Web.Server, because there it no OpenTelemetry
                 // instrumentation
                 tracing.SetResourceBuilder(resourceBuilder)
-                       .SetSampler(new AlwaysOnSampler())
-                       .AddAspNetCoreInstrumentation()
-                       .AddHttpClientInstrumentation()
-                       .AddEntityFrameworkCoreInstrumentation();
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation();
 
                 if (!string.IsNullOrWhiteSpace(otlpEndpoint))
                 {
                     tracing.AddOtlpExporter();
                 }
-            })
-            .StartWithHost();
+            });
 
         return builder;
     }

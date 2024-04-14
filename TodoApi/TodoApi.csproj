@@ -16,20 +16,16 @@
     <PackageReference Include="Microsoft.NET.Build.Containers" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="MiniValidation" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-  </ItemGroup>
-  
-  <ItemGroup>
+    <PackageReference Include="OpenTelemetry" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" />
-    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.EventCounters" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore"/>
-    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Process" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.EventCounters" />
   </ItemGroup>
 
   <ItemGroup>

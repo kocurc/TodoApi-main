@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Authorization;
-using TodoApi.Todos;
+using TodoApi.Extensions;
 
-namespace TodoApi;
+namespace TodoApi.Todos;
 
 internal static class TodoApi
 {
