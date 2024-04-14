@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0'
+        dotnet-version: '7.0.1'
 
     - name: Build solution
       run: dotnet build TodoApi.sln --configuration Release
@@ -27,7 +27,7 @@ jobs:
     - name: Push docker image to ghcr.io with dotnet publish
       run: |
         dotnet publish ./TodoApi/TodoApi.csproj --os linux --arch x64 /t:PublishContainer -c Debug -p:PublishDockerImage=true -p:DockerImageName=ghcr.io/${{ github.repository }}/my-image:v${{github.run_id}}
-
+      # Explain the above command
 
   build-and-publish-images:
     runs-on: ubuntu-latest
