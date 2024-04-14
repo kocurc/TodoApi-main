@@ -24,7 +24,7 @@ jobs:
     - name: Test solution
       run: dotnet test TodoApi.sln --configuration Release --no-build
 
-    - name: Push docker image to ghcr.io
+    - name: Push docker image to ghcr.io with dotnet publish
       run: |
         dotnet publish ./TodoApi/TodoApi.csproj --os linux --arch x64 /t:PublishContainer -c Debug -p:PublishDockerImage=true -p:DockerImageName=ghcr.io/${{ github.repository }}/my-image:v${{github.run_id}}
 
