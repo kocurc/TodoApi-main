@@ -11,6 +11,9 @@ COPY . .
 # Go to the project folder
 WORKDIR /TodoApi
 
+# Restore dependencies
+RUN ls
+
 # Build and publish
 RUN dotnet publish -c Release -o Out
 
