@@ -4,6 +4,8 @@
     <UserSecretsId>e616b306-8ad0-4843-a0e0-79b3b5655c22</UserSecretsId>
     <ContainerRepository>todo-api</ContainerRepository>
     <ContainerImageTag>latest</ContainerImageTag>
+    <TargetFrameworkIdentifier>.NETCOREAPP</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>7.0</TargetFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
