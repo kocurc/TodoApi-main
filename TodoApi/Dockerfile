@@ -4,6 +4,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 ARG OUTPUT_PATH
 ENV OUTPUT_PATH=$OUTPUT_PATH
 
+WORKDIR /TodoApi
+
 # Copy everything to an image of a container
 COPY . .
 
