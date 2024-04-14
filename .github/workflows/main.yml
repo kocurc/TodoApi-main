@@ -23,3 +23,31 @@ jobs:
 
     - name: Test solution
       run: dotnet test TodoApi.sln --configuration Release --no-build
+
+    - name: Push docker image to ghcr.io
+      run: |
+        dotnet publish ./TodoApi/TodoApi.csproj --os linux --arch x64 /t:PublishContainer -c Debug -p:PublishDockerImage=true -p:DockerImageName=ghcr.io/${{ github.repository }}/my-image:v${{github.run_id}}
+
+
+  build-images:
+    runs-on: ubuntu-latest
+    if: success()
+    needs: build-and-test-solution
+    steps:
+    
+    - name: Checkout solution code
+      uses: actions/checkout@v4
+
+    - name: Login to GitHub Container Registry - ghcr.io
+      uses: docker/login-action@v3.1.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+        #- name: Pull Docker image
+        #run: docker pull ghcr.io/${{ github.repository }}/my-image:latest
+  
+      #- name: Run tests
+        #run: |
+          #docker run --rm ghcr.io/${{ github.repository }}/my-image:latest ./run-tests.sh

@@ -1,4 +1,5 @@
-version: '3.4'
+# Docker Composse specification version taken from https://docs.docker.com/compose/compose-file/compose-versioning/ based on the version of the Docker Client and Server on the ubuntu-latets image. 
+version: '3.8'
 
 configs:
   prometheus_config:
@@ -10,10 +11,11 @@ x-common-variables: &common-variables
    ASPNETCORE_Kestrel__Certificates__Default__Password: YourPasswordHere
    ASPNETCORE_Kestrel__Certificates__Default__Path: /https/todoapps.pfx
 
+# Services define what containers/applications are running and how they are configured.
 services:
-  todo-api:
+  todo-api: # Service/application name.
     image: todo-api
-    pull_policy: if_not_present
+    pull_policy: if_not_present # Pull policy for the image if it is not present.
     environment:
       <<: *common-variables
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
