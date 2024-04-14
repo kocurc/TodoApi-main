@@ -49,6 +49,8 @@ jobs:
         file: ./TodoApi/Dockerfile
         push: true
         tags: v0.${{ github.run_id }}
+        build-args: |
+          OUTPUT_PATH='/Out'
 
   build-and-publish-images:
     runs-on: ubuntu-latest
