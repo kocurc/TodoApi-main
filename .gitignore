@@ -298,3 +298,6 @@ __pycache__/
 *.db-shm
 *.db-wal
 /.tye
+
+# Publish folders
+TodoApi/Out
