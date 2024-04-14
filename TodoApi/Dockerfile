@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 
 # Set variable for output path: docker build --build-arg OUTPUT_PATH='/Out' --tag todo-api .
 ARG OUTPUT_PATH
@@ -16,7 +16,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o Out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 ARG OUTPUT_PATH
 ENV OUTPUT_PATH=$OUTPUT_PATH
 COPY --from=build-env /Out /Out
