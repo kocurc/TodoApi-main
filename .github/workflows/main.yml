@@ -29,7 +29,7 @@ jobs:
         dotnet publish ./TodoApi/TodoApi.csproj --os linux --arch x64 /t:PublishContainer -c Debug -p:PublishDockerImage=true -p:DockerImageName=ghcr.io/${{ github.repository }}/my-image:v${{github.run_id}}
 
 
-  build-images:
+  build-and-publish-images:
     runs-on: ubuntu-latest
     if: success()
     needs: build-and-test-solution
@@ -45,9 +45,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-        #- name: Pull Docker image
-        #run: docker pull ghcr.io/${{ github.repository }}/my-image:latest
+    #- name: Pull Docker image
+      #run: docker pull ghcr.io/${{ github.repository }}/my-image:latest
   
-      #- name: Run tests
-        #run: |
-          #docker run --rm ghcr.io/${{ github.repository }}/my-image:latest ./run-tests.sh
+    #- name: Run tests
+      #run: |
+        #docker run --rm ghcr.io/${{ github.repository }}/my-image:latest ./run-tests.sh
