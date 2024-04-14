@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <UserSecretsId>e616b306-8ad0-4843-a0e0-79b3b5655c22</UserSecretsId>
-    <ContainerImageName>todo-api</ContainerImageName>
+    <ContainerRepository>todo-api</ContainerRepository>
     <ContainerImageTag>latest</ContainerImageTag>
   </PropertyGroup>
 
