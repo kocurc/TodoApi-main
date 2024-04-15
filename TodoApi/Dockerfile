@@ -8,10 +8,6 @@ ENV OUTPUT_PATH=$OUTPUT_PATH
 # Copy everything to an image of a container
 COPY . .
 
-# Go to the project folder
-WORKDIR /TodoApi
-
-# Restore dependencies
 RUN ls
 
 # Build and publish
