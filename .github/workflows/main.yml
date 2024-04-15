@@ -45,7 +45,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@master
       with:
-        context: ./TodoApi/
+        context: .
         file: ./TodoApi/Dockerfile
         push: true
         tags: v0.${{ github.run_id }}

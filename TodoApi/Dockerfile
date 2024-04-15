@@ -6,7 +6,7 @@ ARG OUTPUT_PATH
 ENV OUTPUT_PATH=$OUTPUT_PATH
 
 # Copy everything to an image of a container
-COPY . .
+COPY ./TodoApi ./TodoApi
 
 RUN ls
 
