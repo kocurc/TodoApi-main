@@ -1,4 +1,5 @@
 ﻿using TodoApi.Authentication;
+using TodoApi.Users;
 
 namespace TodoApi.Tests;
 
@@ -9,7 +10,9 @@ internal class TodoApplication : WebApplicationFactory<Program>
     public TodoDbContext CreateTodoDbContext()
     {
         var db = Services.GetRequiredService<IDbContextFactory<TodoDbContext>>().CreateDbContext();
+
         db.Database.EnsureCreated();
+
         return db;
     }
 

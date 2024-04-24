@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Todos;
+using TodoApi.Users;
 
 namespace TodoApi;
 

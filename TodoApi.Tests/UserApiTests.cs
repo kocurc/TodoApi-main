@@ -1,4 +1,6 @@
-﻿namespace TodoApi.Tests;
+﻿using TodoApi.Users;
+
+namespace TodoApi.Tests;
 
 public class UserApiTests
 {

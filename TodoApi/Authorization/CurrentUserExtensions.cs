@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using TodoApi.Authorization;
+using TodoApi.Users;
 
-namespace TodoApi;
+namespace TodoApi.Authorization;
 
 public static class CurrentUserExtensions
 {

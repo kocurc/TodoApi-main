@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Authorization;
 using TodoApi.Extensions;
+using TodoApi.Filters;
 
 namespace TodoApi.Todos;
 

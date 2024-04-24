@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using TodoApi.Authentication;
+using TodoApi.Filters;
 
 namespace TodoApi.Users;
 

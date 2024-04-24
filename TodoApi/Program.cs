@@ -1,4 +1,5 @@
 using TodoApi.Authentication;
+using TodoApi.Authorization;
 using TodoApi.Extensions;
 using TodoApi.Todos;
 using TodoApi.Users;

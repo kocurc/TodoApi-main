@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace TodoApi;
+namespace TodoApi.Users;
 
 // This is our TodoUser, we can modify this if we need
 // to add custom properties to the user

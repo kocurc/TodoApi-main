@@ -12,7 +12,6 @@ public static class RateLimitExtensions
         return services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
             options.AddPolicy(Policy, context =>
             {
                 // We always have a user name
