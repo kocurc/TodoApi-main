@@ -50,5 +50,5 @@ jobs:
       
       - name: Run Trivy
         run: |
-          trivy image app
+          trivy filesystem app
       
