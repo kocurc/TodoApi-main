@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UserSecretsId>5f1c5d88-3c98-4247-8a6d-b76a2c954eeb</UserSecretsId>
+    <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
@@ -14,12 +15,4 @@
     <ProjectReference Include="..\Todo.Web\Client\Todo.Web.Client.csproj" />
     <ProjectReference Include="..\TodoApi\TodoApi.csproj" />
   </ItemGroup>
-
-    <ItemGroup>
-        <Using Include="System.Net.Http.Json" />
-        <Using Include="System.Net.Http" />
-        <Using Include="System.Net" />
-        <Using Include="Xunit" />
-    </ItemGroup>
-
 </Project>

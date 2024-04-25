@@ -7,7 +7,7 @@ ENV OUTPUT_PATH=$OUTPUT_PATH
 
 # Copy TodoApi project files
 RUN mkdir --parents /TodoApi
-COPY . ./TodoApi
+COPY TodoApi TodoApi
 
 # List files in TodoApi directory
 RUN ls /TodoApi

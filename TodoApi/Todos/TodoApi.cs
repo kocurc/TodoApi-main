@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Authorization;
 using TodoApi.Extensions;
 using TodoApi.Filters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace TodoApi.Todos;
 
-internal static class TodoApi
+public static class TodoApi
 {
     public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes)
     {

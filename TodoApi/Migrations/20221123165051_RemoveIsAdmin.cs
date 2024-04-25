@@ -2,28 +2,27 @@
 
 #nullable disable
 
-namespace TodoApi.Migrations
+namespace TodoApi.Migrations;
+
+/// <inheritdoc />
+public partial class RemoveIsAdmin : Migration
 {
     /// <inheritdoc />
-    public partial class RemoveIsAdmin : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "IsAdmin",
-                table: "AspNetUsers");
-        }
+        migrationBuilder.DropColumn(
+            name: "IsAdmin",
+            table: "AspNetUsers");
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsAdmin",
-                table: "AspNetUsers",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: false);
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AddColumn<bool>(
+            name: "IsAdmin",
+            table: "AspNetUsers",
+            type: "INTEGER",
+            nullable: false,
+            defaultValue: false);
     }
 }

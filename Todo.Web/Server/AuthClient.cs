@@ -1,54 +1,56 @@
-﻿using Todo.Web.Shared;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Todo.Web.Shared;
 
-namespace Todo.Web.Server
+namespace Todo.Web.Server;
+
+public class AuthClient
 {
-    public class AuthClient
+    private readonly HttpClient _client;
+
+    public AuthClient(HttpClient client)
     {
-        private readonly HttpClient _client;
+        _client = client;
+    }
 
-        public AuthClient(HttpClient client)
+    public async Task<string?> GetTokenAsync(UserInfo userInfo)
+    {
+        var response = await _client.PostAsJsonAsync("users/token", userInfo);
+
+        if (!response.IsSuccessStatusCode)
         {
-            _client = client;
+            return null;
         }
 
-        public async Task<string?> GetTokenAsync(UserInfo userInfo)
+        var token = await response.Content.ReadFromJsonAsync<AuthToken>();
+
+        return token?.Token;
+    }
+
+    public async Task<string?> CreateUserAsync(UserInfo userInfo)
+    {
+        var response = await _client.PostAsJsonAsync("users", userInfo);
+
+        if (!response.IsSuccessStatusCode)
         {
-            var response = await _client.PostAsJsonAsync("users/token", userInfo);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
-
-            return token?.Token;
+            return null;
         }
 
-        public async Task<string?> CreateUserAsync(UserInfo userInfo)
+        return await GetTokenAsync(userInfo);
+    }
+
+    public async Task<string?> GetOrCreateUserAsync(string provider, ExternalUserInfo userInfo)
+    {
+        var response = await _client.PostAsJsonAsync($"users/token/{provider}", userInfo);
+
+        if (!response.IsSuccessStatusCode)
         {
-            var response = await _client.PostAsJsonAsync("users", userInfo);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            return await GetTokenAsync(userInfo);
+            return null;
         }
 
-        public async Task<string?> GetOrCreateUserAsync(string provider, ExternalUserInfo userInfo)
-        {
-            var response = await _client.PostAsJsonAsync($"users/token/{provider}", userInfo);
+        var token = await response.Content.ReadFromJsonAsync<AuthToken>();
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
-
-            return token?.Token;
-        }
+        return token?.Token;
     }
 }
