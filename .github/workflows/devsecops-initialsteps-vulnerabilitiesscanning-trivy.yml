@@ -50,5 +50,7 @@ jobs:
       
       - name: Run Trivy
         run: |
+          ls -l app
+          ls -l
           trivy filesystem app
       
