@@ -1,17 +1,27 @@
+using System;
+using System.Threading.Tasks;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Todo.Web.Client;
+using Microsoft.Extensions.DependencyInjection;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
+namespace Todo.Web.Client;
 
-builder.Services.AddHttpClient<TodoClient>(client =>
+public class Program
 {
-    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    public static async Task Main(string[] args)
+    {
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-    // The cookie auth stack detects this header and avoids redirects for unauthenticated
-    // requests
-    client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
-});
-builder.Services.AddSingleton<HtmlSanitizer>();
+        builder.Services.AddHttpClient<TodoClient>(client =>
+        {
+            client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 
-await builder.Build().RunAsync();
+            // The cookie auth stack detects this header and avoids redirects for unauthenticated
+            // requests
+            client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
+        });
+        builder.Services.AddSingleton<HtmlSanitizer>();
+
+        await builder.Build().RunAsync();
+    }
+}

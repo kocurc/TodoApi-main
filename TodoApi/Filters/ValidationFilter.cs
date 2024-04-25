@@ -1,8 +1,14 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http.Metadata;
 using MiniValidation;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
-namespace TodoApi;
+namespace TodoApi.Filters;
 
 public static class ValidationFilterExtensions
 {

@@ -1,7 +1,12 @@
-﻿using Auth0.AspNetCore.Authentication;
+﻿using System;
+using System.Collections.Generic;
+using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Todo.Web.Server.Authentication;
 

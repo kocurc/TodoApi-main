@@ -1,7 +1,8 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using TodoApi.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TodoApi;
+namespace TodoApi.Authorization;
 
 public static class AuthorizationHandlerExtensions
 {

@@ -8,7 +8,7 @@ on:
         
 jobs:
   vulnerabilities-scanning-sarif:
-    name: trivs-sarif
+    name: trivy-sarif
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -30,7 +30,25 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
     
-  # run trivy from CLI:
-  # wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
-  # sudo dpkg -i trivy_0.18.3_Linux-64bit.deb 
-  # Run trivy.exe
+  vulnerabilities-scanning-trivy-cli:
+    name: trivy-cli
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          path: app
+
+      - name: Downlod Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
+      
+      - name: Install Trivy
+        run: |
+          sudo dpkg --install trivy_0.18.3_Linux-64bit.deb
+      
+      - name: Run Trivy
+        run: |
+          trivy image app
+      

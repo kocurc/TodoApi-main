@@ -1,6 +1,11 @@
-﻿namespace TodoApi.Tests;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-internal static class DbContextExtensions
+namespace TodoApi.Tests;
+
+public static class DbContextExtensions
 {
     public static IServiceCollection AddDbContextOptions<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder<TContext>> configure) where TContext : DbContext
     {

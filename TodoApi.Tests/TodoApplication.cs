@@ -1,15 +1,34 @@
-﻿using TodoApi.Authentication;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TodoApi.Authentication;
+using TodoApi.Users;
+using Xunit;
 
 namespace TodoApi.Tests;
 
-internal class TodoApplication : WebApplicationFactory<Program>
+public class TodoApplication : WebApplicationFactory<Program>
 {
     private readonly SqliteConnection _sqliteConnection = new("Filename=:memory:");
 
     public TodoDbContext CreateTodoDbContext()
     {
         var db = Services.GetRequiredService<IDbContextFactory<TodoDbContext>>().CreateDbContext();
+
         db.Database.EnsureCreated();
+
         return db;
     }
 

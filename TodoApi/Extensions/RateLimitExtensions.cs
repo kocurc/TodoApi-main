@@ -1,7 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TodoApi;
+namespace TodoApi.Extensions;
 
 public static class RateLimitExtensions
 {
@@ -12,7 +16,6 @@ public static class RateLimitExtensions
         return services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
             options.AddPolicy(Policy, context =>
             {
                 // We always have a user name
