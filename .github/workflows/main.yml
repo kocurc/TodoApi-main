@@ -48,7 +48,7 @@ jobs:
         context: .
         file: ./TodoApi/Dockerfile
         push: true
-        tags: v0.${{ github.run_id }}
+        tags: ${{ env.REGISTRY }}/${{ github.repository }}:v0.${{ github.run_id }}
         build-args: |
           OUTPUT_PATH='/Out'
 
