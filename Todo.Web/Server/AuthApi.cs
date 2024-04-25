@@ -30,7 +30,6 @@ public static class AuthApi
 
         group.MapPost("login", async (UserInfo userInfo, AuthClient client) =>
         {
-            // Retrieve the access token give the user info
             var token = await client.GetTokenAsync(userInfo);
 
             if (token is null)
