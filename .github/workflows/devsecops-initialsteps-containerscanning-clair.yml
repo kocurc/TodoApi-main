@@ -26,6 +26,7 @@ jobs:
           uses: quay/clair-action@main
           with:
             image-ref: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:v0.${{ env.BUILD_ID }}
+            db-file: vulnerabilityDatabase.db
             format: sarif
             output: clair_todo-api_result.sarif
     
