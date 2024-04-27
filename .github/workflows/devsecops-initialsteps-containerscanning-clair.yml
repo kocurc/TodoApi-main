@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+        - name: Grab cache Clair Vulnerability Database
+          uses: actions/cache@v3
+          with:
+            path: vulnerabilityDatabase.db
+            key: vulnerabilityDatabase.db
+
         - name: Run Clair for todo-api Docker image
           uses: quay/clair-action@main
           with:
