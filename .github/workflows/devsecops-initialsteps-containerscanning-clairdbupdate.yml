@@ -1,0 +1,28 @@
+name: Containers Scanning Clair Vulnerability Database Update
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Run Clair Vulnerability Database update
+        uses: quay/clair-action@allow-update
+        with:
+          db-file: vulnerabilityDatabase.db
+          mode: update
+
+      - name: Cache Database
+        uses: actions/cache@master
+        with:
+          path: vulnerabilityDatabase.db
+          key: vulnerabilityDatabase.db
