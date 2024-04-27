@@ -1,0 +1,29 @@
+name: Containers Scanning Clair
+
+on:
+  workflow_run:
+    workflows: ["Development main workflow"]
+    types: completed
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: todo-api
+  BUILD_ID: ${{ github.run_id }}
+  GITHUB_LOGIN: ${{ github.actor }}
+    
+jobs:
+  clair:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+        - name: Run Clair for todo-api Docker image
+          uses: quay/clair-action@main
+          with:
+            image-ref: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:v0.${{ env.BUILD_ID }}
+            format: sarif
+            output: clair_todo-api_result.sarif
+    
+        - name: Upload sarif results for todo-api Docker image Clair scan
+          uses: github/codeql-action/upload-sarif@v3
+          with:
+            sarif_file: clair_todo-api_result.sarif
