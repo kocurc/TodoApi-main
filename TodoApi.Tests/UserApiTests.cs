@@ -60,8 +60,6 @@ public class UserApiTests
         Assert.Equal(new[] { "The Username field is required." }, problemDetails.Errors["Username"]);
     }
 
-
-
     [Fact]
     public async Task MissingUsernameOrProviderKeyReturnsBadRequest()
     {
