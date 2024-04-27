@@ -8,7 +8,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: todo-api
-  BUILD_ID: ${{ github.run_id }}
   GITHUB_LOGIN: ${{ github.actor }}
 
 jobs:
@@ -49,7 +48,7 @@ jobs:
         context: .
         file: ./TodoApi/Dockerfile
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:v0.${{ env.BUILD_ID }}
+        tags: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest
         build-args: |
           OUTPUT_PATH='/Out'
 
