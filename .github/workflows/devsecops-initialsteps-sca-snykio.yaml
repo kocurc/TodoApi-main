@@ -22,3 +22,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --file=TodoApi.sln
+        #TODO sarif output
