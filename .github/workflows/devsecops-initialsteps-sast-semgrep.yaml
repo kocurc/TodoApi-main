@@ -9,11 +9,12 @@ on:
 jobs:
   sast:
     name: semgrep
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     container:
       image: returntocorp/semgrep
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.1.4
     - run: semgrep ci
+    #TODO sarif output

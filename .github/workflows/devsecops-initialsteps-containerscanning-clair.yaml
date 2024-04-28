@@ -16,13 +16,13 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
         - name: Grab cache Clair Vulnerability Database
-          uses: actions/cache@v3
+          uses: actions/cache@v4.0.2
           with:
             path: vulnerabilityDatabase.db
             key: vulnerabilityDatabase.db
 
         - name: Run Clair for todo-api Docker image
-          uses: quay/clair-action@main
+          uses: quay/clair-action@v0.0.8
           with:
             image-ref: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest
             db-file: vulnerabilityDatabase.db
@@ -30,6 +30,6 @@ jobs:
             output: clair_todo-api_result.sarif
     
         - name: Upload sarif results for todo-api Docker image Clair scan
-          uses: github/codeql-action/upload-sarif@v3
+          uses: github/codeql-action/upload-sarif@v3.25.3
           with:
             sarif_file: clair_todo-api_result.sarif
