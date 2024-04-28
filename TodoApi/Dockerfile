@@ -16,6 +16,7 @@ COPY TodoApi TodoApi
 
 RUN dotnet publish -c Release -o OUTPUT_PATH ./TodoApi/TodoApi.csproj
 
+
 FROM mcr.microsoft.com/dotnet/aspnet@sha256:69f5151d295791d85543e75905e69b6b74e3f0babd8a41583d8b06c99e759f4f
 
 ARG OUTPUT_PATH
