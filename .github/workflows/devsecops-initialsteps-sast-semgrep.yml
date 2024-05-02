@@ -16,5 +16,9 @@ jobs:
       image: returntocorp/semgrep
     steps:
     - uses: actions/checkout@v4.1.4
-    - run: semgrep ci
-    #TODO sarif output
+    - run: semgrep ci --sarif --sarif-output=./Reports/semgrep-scan-result.sarif
+
+    - name: Upload sarif results for Semgrep scan
+      uses: github/codeql-action/upload-sarif@v3.25.3
+      with:
+        sarif_file: ./Reports/semgrep-scan-result.sarif

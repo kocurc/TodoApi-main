@@ -27,9 +27,4 @@ ENTRYPOINT ["dotnet"]
 CMD ["/Out/TodoApi"]
 
 HEALTHCHECK --interval=5m --timeout=30s --start-period=30s --retries=3 \
-    CMD powershell -command `  
-        try { `
-        $response = Invoke-WebRequest https://localhost:5001; `
-        if ($response.StatusCode -eq 200) { return 0} `
-        else {return 1}; `
-        } catch { return 1 }
+    CMD powershell ./Scripts/HealthCheck.ps1
