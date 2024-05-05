@@ -27,9 +27,9 @@ jobs:
             image-ref: ${{ env.REGISTRY }}/${{ env.GITHUB_LOGIN }}/${{ env.IMAGE_NAME }}:latest
             db-file: vulnerabilityDatabase.db
             format: sarif
-            output: clair_todo-api_result.sarif
+            output: clair-scan-result.sarif
     
         - name: Upload sarif results for todo-api Docker image Clair scan
           uses: github/codeql-action/upload-sarif@v3.25.3
           with:
-            sarif_file: clair_todo-api_result.sarif
+            sarif_file: clair-scan-result.sarif
