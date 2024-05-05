@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Todo.Web.Server;
 using Todo.Web.Server.Authentication;
+
+namespace Todo.Web.Server;
 
 public class Program
 {
@@ -47,15 +48,48 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
         app.UseBlazorFrameworkFiles();
+
         app.UseStaticFiles();
 
         app.UseRouting();
 
         app.UseAuthentication();
+
         app.UseAuthorization();
 
         app.MapFallbackToPage("/_Host");
+
+        // TODO: Add security headers description in framework
+        app.UseSecurityHeaders(policies => policies
+            .AddFrameOptionsDeny()
+            .AddXssProtectionBlock()
+            .AddContentTypeOptionsNoSniff()
+            .AddStrictTransportSecurityMaxAgeIncludeSubDomains(
+                maxAgeInSeconds: 60 * 60 * 24 * 365) // maxage = one year in seconds
+            .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+            .RemoveServerHeader()
+            .AddContentSecurityPolicy(builder =>
+            {
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self();
+                builder.AddFrameAncestors().None();
+            })
+            .AddCrossOriginOpenerPolicy(builder =>
+            {
+                builder.SameOrigin();
+            })
+            .AddCrossOriginEmbedderPolicy(builder =>
+            {
+                builder.RequireCorp();
+            })
+            .AddCrossOriginResourcePolicy(builder =>
+            {
+                builder.SameOrigin();
+            })
+            .AddCustomHeader("X-My-Test-Header", "Header value"));
+
 
         // Configure the APIs
         app.MapAuth();
