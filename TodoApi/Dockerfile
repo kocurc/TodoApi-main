@@ -7,7 +7,6 @@ LABEL description="This is TodoApi layer image of whole TODOAPI-MAIN application
 It is responsible among others for authorization, authentication and database."
 
 RUN useradd --system --user-group kocurc
-USER kocurc
 
 ARG OUTPUT_PATH
 ENV OUTPUT_PATH=$OUTPUT_PATH
@@ -15,6 +14,7 @@ ENV OUTPUT_PATH=$OUTPUT_PATH
 RUN mkdir /TodoApi
 COPY TodoApi TodoApi
 
+USER kocurc
 RUN dotnet publish -c Release -o OUTPUT_PATH ./TodoApi/TodoApi.csproj
 
 
