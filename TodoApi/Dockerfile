@@ -12,7 +12,7 @@ USER kocurc
 ARG OUTPUT_PATH
 ENV OUTPUT_PATH=$OUTPUT_PATH
 
-RUN mkdir --parents /TodoApi
+RUN sudo mkdir --parents /TodoApi
 COPY TodoApi TodoApi
 
 RUN dotnet publish -c Release -o OUTPUT_PATH ./TodoApi/TodoApi.csproj
