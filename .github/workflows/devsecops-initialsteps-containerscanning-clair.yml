@@ -11,10 +11,13 @@ env:
   GITHUB_LOGIN: ${{ github.actor }}
     
 jobs:
+
   clair:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
+
         - name: Grab cache Clair Vulnerability Database
           uses: actions/cache@v4.0.2
           with:
@@ -28,7 +31,8 @@ jobs:
             db-file: vulnerabilityDatabase.db
             format: sarif
             output: clair-scan-result.sarif
-    
+
+        # TODO No report found for clair-scan-result.sarif
         - name: Upload sarif results for todo-api Docker image Clair scan
           uses: github/codeql-action/upload-sarif@v3.25.3
           with:

@@ -54,7 +54,6 @@ public class Program
         }
 
         app.UseRateLimiter();
-
         app.Map("/", () => Results.Redirect("/swagger"));
 
         // Configure the APIs
