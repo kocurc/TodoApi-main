@@ -61,7 +61,7 @@ public class Program
 
         app.MapFallbackToPage("/_Host");
 
-        // TODO: Add security headers description in framework
+        // TODO: Add security headers description in framework https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
         app.UseSecurityHeaders(policies => policies
             .AddFrameOptionsDeny()
             .AddXssProtectionBlock()
