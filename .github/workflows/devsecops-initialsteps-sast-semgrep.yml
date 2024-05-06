@@ -1,13 +1,17 @@
 name: Static Application Securiry Test (SAST) Semgrep
 
 on:
+
   workflow_run:
     workflows: ["Development main workflow"]
     types: completed
+
   workflow_dispatch:
     
 jobs:
+
   sast:
+
     name: semgrep
     runs-on: ubuntu-22.04
     env:
