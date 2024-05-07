@@ -1,6 +1,7 @@
 name: Containers Scanning Clair
 
 on:
+
   workflow_run:
     workflows: ["Development main workflow"]
     types: completed
@@ -15,7 +16,6 @@ jobs:
   clair:
     runs-on: ubuntu-22.04
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
     steps:
 
         - name: Grab cache Clair Vulnerability Database
@@ -32,7 +32,7 @@ jobs:
             format: sarif
             output: clair-scan-result.sarif
 
-        - name: Upload sarif results for todo-api Docker image Clair scan
+        - name: Upload SARIF results for todo-api Docker image Clair scan
           uses: github/codeql-action/upload-sarif@v3.25.3
           with:
             sarif_file: clair-scan-result.sarif

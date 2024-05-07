@@ -13,7 +13,7 @@ env:
   GITHUB_LOGIN: ${{ github.actor }}
 
 jobs:
-  # TODO GitHub Actions: Fix all warnings from the GitHub Actions runner, example: https://github.com/kocurc/TodoApi-main/actions/runs/8961996949
+  
   build-and-test-solution:
     runs-on: ubuntu-22.04
     steps:

@@ -28,6 +28,9 @@ services:
       - ~/.aspnet/https:/https:ro
       - ./TodoApi/.db:/app/.db
     container_name: todo-api
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
 
   todo-web-server:
     image: todo-web-server
@@ -43,6 +46,9 @@ services:
       - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
       - ~/.aspnet/https:/https:ro
     container_name: todo-web-server
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
 
   prometheus:
     image: prom/prometheus

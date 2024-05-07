@@ -11,7 +11,6 @@ on:
 jobs:
 
   sast:
-
     name: semgrep
     runs-on: ubuntu-22.04
     env:
@@ -19,10 +18,11 @@ jobs:
     container:
       image: returntocorp/semgrep
     steps:
-    - uses: actions/checkout@v4.1.4
-    - run: semgrep ci --sarif --sarif-output=./Reports/semgrep-scan-result.sarif
 
-    - name: Upload sarif results for Semgrep scan
+    - uses: actions/checkout@v4.1.4
+    - run: semgrep ci --sarif --sarif-output=semgrep-scan-result.sarif
+
+    - name: Upload SARIF results for Semgrep scan
       uses: github/codeql-action/upload-sarif@v3.25.3
       with:
-        sarif_file: ./Reports/semgrep-scan-result.sarif
+        sarif_file: semgrep-scan-result.sarif
