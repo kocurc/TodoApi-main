@@ -1,8 +1,10 @@
 name: Development main workflow
 
 on:
+
   pull_request:
     types: opened
+
   workflow_dispatch:
 
 env:
@@ -11,6 +13,9 @@ env:
   GITHUB_LOGIN: ${{ github.actor }}
 
 jobs:
+  # TODO Upgrade all runners to Ubuntu 24.04
+  # TODO GitHub Actions: Fix all warnings from the GitHub Actions runner, example: https://github.com/kocurc/TodoApi-main/actions/runs/8961996949
+  # TODO Testing secret: aws_secret="AKIAIMNOJVGFDXXXE4OA"
   build-and-test-solution:
     runs-on: ubuntu-22.04
     steps:
