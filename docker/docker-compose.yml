@@ -11,11 +11,10 @@ x-common-variables: &common-variables
    ASPNETCORE_Kestrel__Certificates__Default__Password: YourPasswordHere
    ASPNETCORE_Kestrel__Certificates__Default__Path: /https/todoapps.pfx
 
-# Services define what containers/applications are running and how they are configured.
 services:
-  todo-api: # Service/application name.
+  todo-api:
     image: todo-api
-    pull_policy: if_not_present # Pull policy for the image if it is not present.
+    pull_policy: if_not_present
     environment:
       <<: *common-variables
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
