@@ -11,11 +11,10 @@ x-common-variables: &common-variables
    ASPNETCORE_Kestrel__Certificates__Default__Password: YourPasswordHere
    ASPNETCORE_Kestrel__Certificates__Default__Path: /https/todoapps.pfx
 
-# Services define what containers/applications are running and how they are configured.
 services:
-  todo-api: # Service/application name.
+  todo-api:
     image: todo-api
-    pull_policy: if_not_present # Pull policy for the image if it is not present.
+    pull_policy: if_not_present
     environment:
       <<: *common-variables
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
@@ -58,6 +57,9 @@ services:
       - source: prometheus_config
         target: /etc/prometheus/prometheus.yml
     container_name: prometheus
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -78,6 +80,9 @@ services:
       - "14269:14269"
       - "9411:9411"
     container_name: jaeger
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
   seq:
     image: datalust/seq:latest
@@ -88,6 +93,9 @@ services:
       - 5341:5341
     environment:
       ACCEPT_EULA: Y
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
   elasticsearch:
     container_name: elastic_search
@@ -108,6 +116,9 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
   kibana:
     image: docker.elastic.co/kibana/kibana:latest
@@ -119,3 +130,6 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
