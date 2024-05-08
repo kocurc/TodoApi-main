@@ -94,7 +94,6 @@ public class Program
         // Configure the APIs
         app.MapAuth();
         app.MapTodos(todoUrl);
-
         app.Run();
     }
 }
