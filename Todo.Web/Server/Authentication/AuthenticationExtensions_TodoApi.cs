@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace TodoApi.Authentication;
 
-public static class AuthenticationExtensions
+public static class AuthenticationExtensions_TodoApi
 {
     public static WebApplicationBuilder AddAuthentication(this WebApplicationBuilder builder)
     {

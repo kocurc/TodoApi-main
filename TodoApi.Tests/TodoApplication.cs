@@ -19,7 +19,7 @@ using Xunit;
 
 namespace TodoApi.Tests;
 
-public class TodoApplication : WebApplicationFactory<Program>
+public class TodoApplication : WebApplicationFactory<Program_TodoApi>
 {
     private readonly SqliteConnection _sqliteConnection = new("Filename=:memory:");
 

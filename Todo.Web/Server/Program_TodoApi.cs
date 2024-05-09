@@ -11,7 +11,7 @@ using TodoApi.Users;
 
 namespace TodoApi;
 
-public class Program
+public class Program_TodoApi
 {
     private static void Main(string[] args)
     {
