@@ -13,7 +13,8 @@ namespace TodoApi;
 
 public class Program_TodoApi
 {
-    private static void Main(string[] args)
+    private static void Main_TodoApi
+        (string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
