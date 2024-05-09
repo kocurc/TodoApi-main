@@ -3,26 +3,28 @@ using System.Threading.Tasks;
 using Ganss.Xss;
 using Shouldly;
 using Todo.Web.Client;
+using Todo.Web.Server;
 using TodoApi.Tests.Builders;
 using Xunit;
 
-namespace TodoApi.Tests.Todo.Web.Client.Tests;
-
-public class TodoClientTests
+namespace TodoApi.Tests.Todo.Web.Client.Tests
 {
-    private readonly HttpClientMockBuilder _httpClientMockBuilder = new();
-
-    [Fact]
-    public async Task GivenUnsanitizedUserNameAndPassword_ThenShouldSanitizeUserNameAndPassword()
+    public class TodoClientTests
     {
-        // Arrange
-        var userLoginData = new UserLoginData("<script>alert('xss')</script>John", "<img src=\"javascript:alert('XSS');\">Password");
-        var todoClient = new TodoClient(_httpClientMockBuilder.WithResponse(HttpStatusCode.OK).Build().Object, new HtmlSanitizer());
+        private readonly HttpClientMockBuilder _httpClientMockBuilder = new();
 
-        // Act
-        var loginResponse = await todoClient.LoginAsync(userLoginData.UserName, userLoginData.Password);
+        [Fact]
+        public async Task GivenUnsanitizedUserNameAndPassword_ThenShouldSanitizeUserNameAndPassword()
+        {
+            // Arrange
+            var userLoginData = new UserLoginData("<script>alert('xss')</script>John", "<img src=\"javascript:alert('XSS');\">Password");
+            var todoClient = new TodoClient(_httpClientMockBuilder.WithResponse(HttpStatusCode.OK).Build().Object, new HtmlSanitizer());
 
-        // Assert
-        loginResponse.ShouldBeTrue();
+            // Act
+            var loginResponse = await todoClient.LoginAsync(userLoginData.UserName, userLoginData.Password);
+
+            // Assert
+            loginResponse.ShouldBeTrue();
+        }
     }
 }

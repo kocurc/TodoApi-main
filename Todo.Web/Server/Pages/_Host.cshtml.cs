@@ -2,23 +2,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Todo.Web.Server.Authentication;
 
-namespace Todo.Web.Server.Pages;
-
-public class IndexModel : PageModel
+namespace Todo.Web.Server.Pages
 {
-    private readonly ExternalProviders _socialProviders;
-
-    public IndexModel(ExternalProviders socialProviders)
+    public class IndexModel(ExternalProviders socialProviders) : PageModel
     {
-        _socialProviders = socialProviders;
-    }
+        public string[] ProviderNames { get; set; } = default!;
+        public string? CurrentUserName { get; set; }
 
-    public string[] ProviderNames { get; set; } = default!;
-    public string? CurrentUserName { get; set; }
-
-    public async Task OnGet()
-    {
-        ProviderNames = await _socialProviders.GetProviderNamesAsync();
-        CurrentUserName = User.Identity!.Name;
+        public async Task OnGet()
+        {
+            ProviderNames = await socialProviders.GetProviderNamesAsync();
+            CurrentUserName = User.Identity!.Name;
+        }
     }
 }

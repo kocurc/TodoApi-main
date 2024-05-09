@@ -1,6 +1,7 @@
-﻿namespace Todo.Web.Server.Authentication;
-
-public class TokenNames
+﻿namespace Todo.Web.Server.Authentication
 {
-    public static readonly string AccessToken = "access_token";
+    public class TokenNames
+    {
+        public static readonly string AccessToken = "access_token";
+    }
 }

@@ -1,13 +1,8 @@
-﻿namespace TodoApi;
-
-public class UserLoginData
+﻿namespace Todo.Web.Server
 {
-    public UserLoginData(string password, string userName)
+    public class UserLoginData(string password, string userName)
     {
-        Password = password;
-        UserName = userName;
+        public string UserName { get; init; } = userName;
+        public string Password { get; init; } = password;
     }
-
-    public string UserName { get; init; }
-    public string Password { get; init; }
 }

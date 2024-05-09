@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Users;
+using Todo.Web.Server.Users;
 
-namespace TodoApi;
-
-public class TodoDbContext : IdentityDbContext<TodoUser>
+namespace Todo.Web.Server
 {
-    public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options) { }
-
-    public DbSet<Todos.Todo> Todos => Set<Todos.Todo>();
-
-    protected override void OnModelCreating(ModelBuilder builder)
+    public class TodoDbContext(DbContextOptions<TodoDbContext> options) : IdentityDbContext<TodoUser>(options)
     {
-        builder.Entity<Todos.Todo>()
-               .HasOne<TodoUser>()
-               .WithMany()
-               .HasForeignKey(t => t.OwnerId)
-               .HasPrincipalKey(u => u.UserName);
+        public DbSet<Todo.Web.Server.Todos.Todo> Todos => Set<Todo.Web.Server.Todos.Todo>();
 
-        base.OnModelCreating(builder);
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Todo.Web.Server.Todos.Todo>()
+                .HasOne<TodoUser>()
+                .WithMany()
+                .HasForeignKey(t => t.OwnerId)
+                .HasPrincipalKey(u => u.UserName);
+
+            base.OnModelCreating(builder);
+        }
     }
 }

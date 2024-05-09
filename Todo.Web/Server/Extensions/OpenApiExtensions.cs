@@ -3,35 +3,36 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
 
-namespace TodoApi.Extensions;
-
-public static class OpenApiExtensions
+namespace Todo.Web.Server.Extensions
 {
-    // Adds the JWT security scheme to the Open API description
-    public static IEndpointConventionBuilder AddOpenApiSecurityRequirement(this IEndpointConventionBuilder builder)
+    public static class OpenApiExtensions
     {
-        var scheme = new OpenApiSecurityScheme()
+        // Adds the JWT security scheme to the Open API description
+        public static IEndpointConventionBuilder AddOpenApiSecurityRequirement(this IEndpointConventionBuilder builder)
         {
-            Type = SecuritySchemeType.Http,
-            Name = JwtBearerDefaults.AuthenticationScheme,
-            Scheme = JwtBearerDefaults.AuthenticationScheme,
-            Reference = new()
+            var scheme = new OpenApiSecurityScheme()
             {
-                Type = ReferenceType.SecurityScheme,
-                Id = JwtBearerDefaults.AuthenticationScheme
-            }
-        };
-
-        return builder.WithOpenApi(operation => new(operation)
-        {
-            Security =
-            {
-                new()
+                Type = SecuritySchemeType.Http,
+                Name = JwtBearerDefaults.AuthenticationScheme,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Reference = new()
                 {
-                    [scheme] = new List<string>()
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
                 }
-            }
-        });
-    }
+            };
 
+            return builder.WithOpenApi(operation => new(operation)
+            {
+                Security =
+                {
+                    new()
+                    {
+                        [scheme] = new List<string>()
+                    }
+                }
+            });
+        }
+
+    }
 }

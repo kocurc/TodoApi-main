@@ -7,32 +7,33 @@ using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
-namespace Todo.Web.Server;
-
-public static class TodoApi
+namespace Todo.Web.Server
 {
-    public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes, string todoUrl)
+    public static class TodoApi
     {
-        // The todo API translates the authentication cookie between the browser the BFF into an 
-        // access token that is sent to the todo API. We're using YARP to forward the request.
-
-        var group = routes.MapGroup("/todos");
-
-        group.RequireAuthorization();
-
-        var transformBuilder = routes.ServiceProvider.GetRequiredService<ITransformBuilder>();
-        var transform = transformBuilder.Create(b =>
+        public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes, string todoUrl)
         {
-            b.AddRequestTransform(async c =>
+            // The todo API translates the authentication cookie between the browser the BFF into an 
+            // access token that is sent to the todo API. We're using YARP to forward the request.
+
+            var group = routes.MapGroup("/todos");
+
+            group.RequireAuthorization();
+
+            var transformBuilder = routes.ServiceProvider.GetRequiredService<ITransformBuilder>();
+            var transform = transformBuilder.Create(b =>
             {
-                var accessToken = await c.HttpContext.GetTokenAsync(TokenNames.AccessToken);
+                b.AddRequestTransform(async c =>
+                {
+                    var accessToken = await c.HttpContext.GetTokenAsync(TokenNames.AccessToken);
 
-                c.ProxyRequest.Headers.Authorization = new("Bearer", accessToken);
+                    c.ProxyRequest.Headers.Authorization = new("Bearer", accessToken);
+                });
             });
-        });
 
-        group.MapForwarder("{*path}", todoUrl, new ForwarderRequestConfig(), transform);
+            group.MapForwarder("{*path}", todoUrl, new ForwarderRequestConfig(), transform);
 
-        return group;
+            return group;
+        }
     }
 }

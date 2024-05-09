@@ -2,14 +2,15 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Todo.Web.Shared;
-
-public class TodoItem
+namespace Todo.Web.Shared
 {
-    public int Id { get; set; }
+    public class TodoItem
+    {
+        public int Id { get; set; }
 
-    [Required]
-    public string Title { get; set; } = default!;
+        [Required]
+        public string Title { get; set; } = default!;
 
-    public bool IsComplete { get; set; }
+        public bool IsComplete { get; set; }
+    }
 }
