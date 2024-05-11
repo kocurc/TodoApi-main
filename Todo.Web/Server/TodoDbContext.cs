@@ -6,7 +6,7 @@ namespace Todo.Web.Server
 {
     public class TodoDbContext(DbContextOptions<TodoDbContext> options) : IdentityDbContext<TodoUser>(options)
     {
-        public DbSet<Todo.Web.Server.Todos.Todo> Todos => Set<Todo.Web.Server.Todos.Todo>();
+        public DbSet<Todos.Todo> Todos => Set<Todos.Todo>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

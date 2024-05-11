@@ -1,9 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Todo.Web.Server.Authentication;
+using Todo.Web.Server.Authorization;
+using Todo.Web.Server.Extensions;
+using Todo.Web.Server.Users;
 
 namespace Todo.Web.Server
 {
@@ -13,15 +17,26 @@ namespace Todo.Web.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Configure auth with the front end
+            // Configure authentication with the front end
             builder.AddAuthentication();
             builder.Services.AddAuthorizationBuilder();
 
-            // Add razor pages so we can render the Blazor WASM todo component
+            // Configure auth
+            builder.AddAuthenticationTodoApi();
+            builder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
+
+            // Configure the database
+            var connectionString = builder.Configuration.GetConnectionString("Todos") ?? "Data Source=.db/Todos.db";
+            builder.Services.AddSqlite<TodoDbContext>(connectionString);
+
+            // Add razor pages, so we can render the Blazor WASM todo component
             builder.Services.AddRazorPages();
 
             // Add the forwarder to make sending requests to the backend easier
             builder.Services.AddHttpForwarder();
+
+            // Configure OpenTelemetry
+            builder.AddOpenTelemetry();
 
             // Configure the HttpClient for the backend API
             var todoUrl = builder.Configuration.GetServiceUri("todoapi")?.ToString() ??
@@ -34,12 +49,31 @@ namespace Todo.Web.Server
                 client.BaseAddress = new(todoUrl);
             });
 
+            // Add the service to generate JWT tokens
+            builder.Services.AddTokenService();
+
+            // Configure rate limiting
+            builder.Services.AddRateLimiting();
+
+            // Configure Open API
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(o => o.InferSecuritySchemes());
+
+            // Configure identity
+            builder.Services.AddIdentityCore<TodoUser>()
+                .AddEntityFrameworkStores<TodoDbContext>();
+
+            // State that represents the current user from the database *and* the request
+            builder.Services.AddCurrentUser();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseWebAssemblyDebugging();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -54,6 +88,30 @@ namespace Todo.Web.Server
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapFallbackToPage("/_Host");
+
+
+
+            // Configure the prometheus endpoint for scraping metrics
+            // NOTE: This should only be exposed on an internal port!
+            // .RequireHost("*:9100");
+
+            app.MapPrometheusScrapingEndpoint();
+
+            // Configure the APIs
+            app.MapAuth();
+            app.MapTodos(todoUrl);
+            //app.MapTodos();
+            app.MapUsers();
+
+            app.UseRateLimiter();
+            app.Map("/", () => Results.Redirect("/swagger"));
+
+
+
+
+
+
+
 
             // https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
             app.UseSecurityHeaders(policies => policies
@@ -84,9 +142,7 @@ namespace Todo.Web.Server
                 })
                 .AddCustomHeader("X-My-Test-Header", "Test header value")); // Adds a custom header named `X-My-Test-Header` with the value `Test header value` only for testing purpose.
 
-            // Configure the APIs
-            app.MapAuth();
-            app.MapTodos(todoUrl);
+            // Run application
             app.Run();
         }
     }

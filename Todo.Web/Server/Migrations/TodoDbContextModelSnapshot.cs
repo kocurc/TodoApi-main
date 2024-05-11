@@ -95,7 +95,7 @@ namespace TodoApi.Migrations
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProviderKey")
+                    b.Property<string>("KeyProvider")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -105,7 +105,7 @@ namespace TodoApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+                    b.HasKey("LoginProvider", "KeyProvider");
 
                     b.HasIndex("UserId");
 

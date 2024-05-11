@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Todo.Web.Server.Authentication;
-using Todo.Web.Shared;
+using Todo.Web.Shared.SharedClasses;
 
 namespace Todo.Web.Server
 {
@@ -79,7 +79,7 @@ namespace Todo.Web.Server
                     // for now we'll prefer the email address
                     var name = (principal.FindFirstValue(ClaimTypes.Email) ?? principal.Identity?.Name)!;
 
-                    var token = await client.GetOrCreateUserAsync(provider, new() { Username = name, ProviderKey = id });
+                    var token = await client.GetOrCreateUserAsync(provider, new() { Username = name, KeyProvider = id });
 
                     if (token is not null)
                     {
@@ -120,7 +120,7 @@ namespace Todo.Web.Server
 
             var tokens = new[]
             {
-                new AuthenticationToken { Name = TokenNames.AccessToken, Value = token }
+                new Microsoft.AspNetCore.Authentication.AuthenticationToken { Name = TokenNames.AccessToken, Value = token }
             };
 
             properties.StoreTokens(tokens);

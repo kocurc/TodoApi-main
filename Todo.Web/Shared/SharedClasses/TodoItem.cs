@@ -1,15 +1,13 @@
-/* Shared classes can be referenced by both the Client and Server */
-
 using System.ComponentModel.DataAnnotations;
 
-namespace Todo.Web.Shared
+namespace Todo.Web.Shared.SharedClasses
 {
     public class TodoItem
     {
-        public int Id { get; set; }
-
         [Required]
         public string Title { get; set; } = default!;
+
+        public int Id { get; set; }
 
         public bool IsComplete { get; set; }
     }

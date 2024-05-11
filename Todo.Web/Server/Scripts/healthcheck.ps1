@@ -1,11 +1,12 @@
+# OK. Use this script to check if the TodoApi application is running in Dockerfile.
 param
 (
     [parameter(ValueFromPipeline = $true)]
-    [string]$TodoApiUrl = 'https://localhost:5001'
+    [string]TodoApiApplicationUrl = 'https://localhost:5001'
 )
 
 try {
-    $response = Invoke-WebRequest $TodoApiUrl
+    $response = Invoke-WebRequest TodoApiApplicationUrl
 
     if ($response.StatusCode -eq 200) {
          return 0 

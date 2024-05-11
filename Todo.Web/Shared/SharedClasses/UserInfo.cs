@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Todo.Web.Shared
+namespace Todo.Web.Shared.SharedClasses
 {
     public class UserInfo
     {

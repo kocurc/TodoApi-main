@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Todo.Web.Shared;
+using Todo.Web.Shared.SharedClasses;
 
 namespace Todo.Web.Server
 {
@@ -16,7 +16,7 @@ namespace Todo.Web.Server
                 return null;
             }
 
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
+            var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
             return token?.Token;
         }
@@ -42,7 +42,7 @@ namespace Todo.Web.Server
                 return null;
             }
 
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
+            var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
             return token?.Token;
         }
