@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace TodoApi.Tests
+namespace Tests.ApiTests
 {
     public static class DbContextExtensions
     {

@@ -18,7 +18,7 @@ using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Users;
 using Xunit;
 
-namespace TodoApi.Tests
+namespace Tests.ApiTests
 {
     public class TodoApplication : WebApplicationFactory<Program>
     {

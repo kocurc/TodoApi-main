@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using Ganss.Xss;
 using Shouldly;
+using Tests.Builders;
 using Todo.Web.Client;
-using Todo.Web.Server;
-using TodoApi.Tests.Builders;
 using Xunit;
 
-namespace TodoApi.Tests.Todo.Web.Client.Tests
+namespace Tests.ClientTests
 {
     public class TodoClientTests
     {

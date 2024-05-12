@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,16 +27,7 @@ namespace Todo.Web.Server.Authentication
             List<string>? providerNames = [];
             var schemes = await schemeProvider.GetAllSchemesAsync();
 
-            foreach (var scheme in schemes)
-            {
-                // All schemes that aren't cookies are social
-                if (scheme.Name == CookieAuthenticationDefaults.AuthenticationScheme || scheme.Name == AuthenticationSchemes.ExternalScheme)
-                {
-                    continue;
-                }
-
-                providerNames.Add(scheme.Name);
-            }
+            providerNames.AddRange(from scheme in schemes where scheme.Name != CookieAuthenticationDefaults.AuthenticationScheme && scheme.Name != AuthenticationSchemes.ExternalScheme select scheme.Name);
 
             return providerNames?.ToArray() ?? [];
         }

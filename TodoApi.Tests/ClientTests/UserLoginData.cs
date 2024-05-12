@@ -1,4 +1,4 @@
-﻿namespace Todo.Web.Server
+﻿namespace Tests.ClientTests
 {
     public class UserLoginData(string password, string userName)
     {

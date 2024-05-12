@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Todo.Web.Server.Authentication;
 using Todo.Web.Shared.SharedClasses;
 
-namespace Todo.Web.Server
+namespace Todo.Web.Server.Authentication
 {
     public static class AuthApi
     {
@@ -40,7 +39,7 @@ namespace Todo.Web.Server
                 return SignIn(userInfo, token);
             });
 
-            group.MapPost("logout", async (HttpContext context) =>
+            group.MapPost("logout", async (context) =>
                 {
                     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -120,7 +119,7 @@ namespace Todo.Web.Server
 
             var tokens = new[]
             {
-                new Microsoft.AspNetCore.Authentication.AuthenticationToken { Name = TokenNames.AccessToken, Value = token }
+                new Microsoft.AspNetCore.Authentication.AuthenticationToken { Name = TokenNamesOK.AccessToken, Value = token }
             };
 
             properties.StoreTokens(tokens);

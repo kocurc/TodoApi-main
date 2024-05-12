@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApi.Tests", "TodoApi.Tests\TodoApi.Tests.csproj", "{0A9F94AE-38A9-426D-A643-1F5582544318}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Tests", "TodoApi.Tests\Todo.Tests.csproj", "{0A9F94AE-38A9-426D-A643-1F5582544318}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FAB2FEF-77C3-4519-AA2E-0CCCDFE1FC13}"
 	ProjectSection(SolutionItems) = preProject

@@ -32,7 +32,7 @@ namespace Todo.Web.Server.Users
                 return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
             });
 
-            group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+            group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
             {
                 var user = await userManager.FindByNameAsync(userInfo.Username);
 
@@ -41,10 +41,10 @@ namespace Todo.Web.Server.Users
                     return TypedResults.BadRequest();
                 }
 
-                return TypedResults.Ok(new AuthToken(tokenService.GenerateToken(user.UserName!)));
+                return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
             });
 
-            group.MapPost("/token/{provider}", async Task<Results<Ok<AuthToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+            group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
             {
                 var user = await userManager.FindByLoginAsync(provider, userInfo.ProviderKey);
 
@@ -64,7 +64,7 @@ namespace Todo.Web.Server.Users
 
                 if (result.Succeeded)
                 {
-                    return TypedResults.Ok(new AuthToken(tokenService.GenerateToken(user.UserName!)));
+                    return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
                 }
 
                 return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));

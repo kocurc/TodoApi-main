@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Todo.Web.Server.Users;
 using Xunit;
 
-namespace TodoApi.Tests
+namespace Tests.ApiTests
 {
     public class UserApiTests
     {
@@ -102,7 +102,7 @@ namespace TodoApi.Tests
 
             Assert.True(response.IsSuccessStatusCode);
 
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
+            var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
             Assert.NotNull(token);
 
@@ -126,7 +126,7 @@ namespace TodoApi.Tests
 
             Assert.True(response.IsSuccessStatusCode);
 
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
+            var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
             Assert.NotNull(token);
 
