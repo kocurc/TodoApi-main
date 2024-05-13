@@ -98,11 +98,12 @@ namespace Todo.Web.Server
             // Configure the APIs
             app.MapAuth();
             app.MapTodos(todoUrl);
-            //app.MapTodos();
+            // app.MapTodos();
             app.MapUsers();
 
             app.UseRateLimiter();
-            app.Map("/", () => Results.Redirect("/swagger"));
+            // app.Map("/", () => Results.Redirect("/swagger"));
+            // app.Map("/", () => Results.Redirect("/"));
 
             // https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
             app.UseSecurityHeaders(policies => policies
