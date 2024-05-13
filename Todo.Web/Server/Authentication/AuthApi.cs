@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Todo.Web.Server.Users;
 using Todo.Web.Shared.SharedClasses;
 
 namespace Todo.Web.Server.Authentication
@@ -119,7 +120,7 @@ namespace Todo.Web.Server.Authentication
 
             var tokens = new[]
             {
-                new Microsoft.AspNetCore.Authentication.AuthenticationToken { Name = TokenNamesOK.AccessToken, Value = token }
+                new Microsoft.AspNetCore.Authentication.AuthenticationToken { Name = TokenNamesOk.AccessToken, Value = token }
             };
 
             properties.StoreTokens(tokens);

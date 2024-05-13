@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.Web.Server.Users;
+using Todo.Web.Shared.SharedClasses;
 using Xunit;
+using AuthenticationToken = Todo.Web.Server.Users.AuthenticationToken;
+using ExternalUserInfo = Todo.Web.Server.Users.ExternalUserInfo;
 
 namespace Tests.ApiTests
 {

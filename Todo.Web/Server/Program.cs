@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Authorization;
 using Todo.Web.Server.Extensions;
+using Todo.Web.Server.Todos;
 using Todo.Web.Server.Users;
 
 namespace Todo.Web.Server
@@ -22,7 +23,6 @@ namespace Todo.Web.Server
             builder.Services.AddAuthorizationBuilder();
 
             // Configure auth
-            builder.AddAuthenticationTodoApi();
             builder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
 
             // Configure the database
@@ -89,8 +89,6 @@ namespace Todo.Web.Server
             app.UseAuthorization();
             app.MapFallbackToPage("/_Host");
 
-
-
             // Configure the prometheus endpoint for scraping metrics
             // NOTE: This should only be exposed on an internal port!
             // .RequireHost("*:9100");
@@ -105,13 +103,6 @@ namespace Todo.Web.Server
 
             app.UseRateLimiter();
             app.Map("/", () => Results.Redirect("/swagger"));
-
-
-
-
-
-
-
 
             // https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
             app.UseSecurityHeaders(policies => policies

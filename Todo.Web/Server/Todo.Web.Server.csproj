@@ -8,22 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Properties\launchSettings_TodoApi.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_WebToolingArtifacts Remove="Properties\launchSettings_TodoApi.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Properties\launchSettings_TodoApi.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.0.0" />
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.4" />

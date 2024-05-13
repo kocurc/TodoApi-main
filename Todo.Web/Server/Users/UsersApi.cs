@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Filters;
+using Todo.Web.Shared.SharedClasses;
 
 namespace Todo.Web.Server.Users
 {

@@ -27,21 +27,10 @@ namespace Todo.Web.Server.Authentication
             // This is the cookie that will store the user information from the external login provider
             authenticationBuilder.AddCookie(AuthenticationSchemes.ExternalScheme);
 
-            // Add external auth providers based on configuration
-            //{
-            //    "Authentication": {
-            //        "Schemes": {
-            //            "<scheme>": {
-            //                "ClientId": "xxx",
-            //                "ClientSecret": "xxxx"
-            //                etc..
-            //            }
-            //        }
-            //    }
-            //}
+            // Add JWT Bearer authentication
+            authenticationBuilder.AddJwtBearer();
 
-            // These are the list of external providers available to the application.
-            // Many more are available from https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers
+            // Add external auth providers based on configuration
             var externalProviders = new Dictionary<string, ExternalAuthProvider>
             {
                 ["GitHub"] = static (builder, configure) => builder.AddGitHub(configure),
