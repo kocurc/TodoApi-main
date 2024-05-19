@@ -10,7 +10,7 @@ public class TodoDbContext(DbContextOptions<TodoDbContext> options) : IdentityDb
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Todo.Web.Server.Todos.Todo>()
+        builder.Entity<Todos.Todo>()
             .HasOne<TodoUser>()
             .WithMany()
             .HasForeignKey(t => t.OwnerId)

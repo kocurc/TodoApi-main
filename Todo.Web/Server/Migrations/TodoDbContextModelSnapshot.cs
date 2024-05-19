@@ -147,7 +147,7 @@ namespace TodoApi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TodoApi.Todos.Todo", b =>
+            modelBuilder.Entity("IEndpointRouteBuilderExtensions.Todos.Todo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +171,7 @@ namespace TodoApi.Migrations
                     b.ToTable("Todos");
                 });
 
-            modelBuilder.Entity("TodoApi.Users.TodoUser", b =>
+            modelBuilder.Entity("IEndpointRouteBuilderExtensions.Users.TodoUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -247,7 +247,7 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TodoApi.Users.TodoUser", null)
+                    b.HasOne("IEndpointRouteBuilderExtensions.Users.TodoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -256,7 +256,7 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TodoApi.Users.TodoUser", null)
+                    b.HasOne("IEndpointRouteBuilderExtensions.Users.TodoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -271,7 +271,7 @@ namespace TodoApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TodoApi.Users.TodoUser", null)
+                    b.HasOne("IEndpointRouteBuilderExtensions.Users.TodoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,16 +280,16 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TodoApi.Users.TodoUser", null)
+                    b.HasOne("IEndpointRouteBuilderExtensions.Users.TodoUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TodoApi.Todos.Todo", b =>
+            modelBuilder.Entity("IEndpointRouteBuilderExtensions.Todos.Todo", b =>
                 {
-                    b.HasOne("TodoApi.Users.TodoUser", null)
+                    b.HasOne("IEndpointRouteBuilderExtensions.Users.TodoUser", null)
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .HasPrincipalKey("UserName")

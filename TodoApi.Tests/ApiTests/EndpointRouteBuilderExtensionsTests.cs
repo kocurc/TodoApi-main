@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Todo.Tests.ApiTests;
 
-public class TodoApiTests
+public class EndpointRouteBuilderExtensionsTests
 {
     [Fact]
     public async Task GetTodos()

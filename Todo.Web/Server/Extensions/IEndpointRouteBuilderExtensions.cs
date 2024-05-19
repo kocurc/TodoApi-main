@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Web.Server.Authorization;
-using Todo.Web.Server.Extensions;
 using Todo.Web.Server.Filters;
 using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
@@ -16,10 +14,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Database;
 using CurrentUser = Todo.Web.Server.Authorization.CurrentUser;
+using Todo.Web.Server.Todos;
 
-namespace Todo.Web.Server.Todos;
+namespace Todo.Web.Server.Extensions;
 
-public static class TodoApi
+// ReSharper disable once InconsistentNaming
+public static class IEndpointRouteBuilderExtensions
 {
     public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes, string todoUrl)
     {
@@ -65,14 +65,14 @@ public static class TodoApi
         {
             return await db.Todos.FindAsync(id) switch
             {
-                Todo todo when todo.OwnerId == owner.Id || owner.IsAdmin => TypedResults.Ok(todo.AsTodoItem()),
+                Todos.Todo todo when todo.OwnerId == owner.Id || owner.IsAdmin => TypedResults.Ok(todo.AsTodoItem()),
                 _ => TypedResults.NotFound()
             };
         });
 
         group.MapPost("/", async Task<Created<TodoItem>> (TodoDbContext db, TodoItem newTodo, CurrentUser owner) =>
         {
-            var todo = new Todo
+            var todo = new Todos.Todo
             {
                 Title = newTodo.Title,
                 OwnerId = owner.Id
@@ -109,4 +109,6 @@ public static class TodoApi
 
         return group;
     }
+
+
 }

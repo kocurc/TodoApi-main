@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Database;
 using Todo.Web.Server.Extensions;
-using Todo.Web.Server.Todos;
 using Todo.Web.Server.Users;
 
 namespace Todo.Web.Server;
@@ -17,27 +16,27 @@ public class Program
     {
         // Initialize default services, logging and configuration sources
         var webApplicationBuilder = WebApplication.CreateBuilder(args);
-        var databaseConnectionString = webApplicationBuilder.Configuration.GetConnectionString("SQLiteConnectionString") ?? "Data Source=.db/TodoApi.db";
+        var databaseConnectionString = webApplicationBuilder.Configuration.GetConnectionString("SQLiteConnectionString") ?? "Data Source=.db/IEndpointRouteBuilderExtensions.db";
 
         // ADD SERVICES TO THE APPLICATION
         // Configures who you are
         webApplicationBuilder.AddAuthentication();
+        // Configures logging, distributed tracing and scraping metrics, for instance using Prometheus
+        webApplicationBuilder.AddOpenTelemetry();
         // Configures what you can do
         webApplicationBuilder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
         // Use SQLLite as the database
         webApplicationBuilder.Services.AddSqlite<TodoDbContext>(databaseConnectionString);
         // Add support for Razor C#-HTML pages
         webApplicationBuilder.Services.AddRazorPages();
-        // Configures logging, distributed tracing and scraping metrics, for instance using Prometheus
-        webApplicationBuilder.AddOpenTelemetry();
+        // Adds per-user rate limiting to the application, with a limit of 100 requests every 10 seconds
+        webApplicationBuilder.Services.AddRateLimiting();
 
         // ADD SINGLETON SERVICES. THEY CREATED ONCE PER APPLICATION AND EVERY REQUEST USES THE SAME INSTANCE
         // Add the service to generate JWT tokens
         webApplicationBuilder.Services.AddSingleton<ITokenService, TokenService>();
 
-
         //----------------------------------------------------------
-        webApplicationBuilder.Services.AddRateLimiting();
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
         webApplicationBuilder.Services.AddSwaggerGen(o => o.InferSecuritySchemes());
         // Configure identity

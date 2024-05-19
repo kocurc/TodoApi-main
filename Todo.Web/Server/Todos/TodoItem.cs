@@ -2,7 +2,8 @@
 
 namespace Todo.Web.Server.Todos;
 
-public class Todo
+// The DTO that excludes the OwnerId (we don't want that exposed to clients)
+public class TodoItem
 {
     public int Id { get; set; }
 
@@ -11,6 +12,4 @@ public class Todo
     [Required]
     public string Title { get; set; } = default!;
 
-    [Required]
-    public string OwnerId { get; set; } = default!;
 }
