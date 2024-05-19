@@ -26,7 +26,7 @@
             <!-- The below lines render TodoApp Blazor component. Component is rendered on the client side, 
             using WebAssembly. -->
             <component type="typeof(Todo.Web.Client.TodoApp)" 
-                       param-CurrentUserName="@Model.CurrentUserName"
+                       param-CurrentUserAuthorizationName="@Model.CurrentUserName"
                        param-SocialProviders="@Model.ProviderNames" 
                        render-mode="WebAssembly" />
         </main>

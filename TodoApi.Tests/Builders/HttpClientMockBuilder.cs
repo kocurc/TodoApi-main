@@ -5,48 +5,47 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Language.Flow;
 
-namespace Tests.Builders
+namespace Todo.Tests.Builders;
+
+public class HttpClientMockBuilder
 {
-    public class HttpClientMockBuilder
+    private readonly ISetup<HttpClient, Task<HttpResponseMessage>> _setup;
+
+    private Mock<HttpClient> _httpClientMock;
+    private HttpResponseMessage _responseMessage;
+
+    public HttpClientMockBuilder()
     {
-        private readonly ISetup<HttpClient, Task<HttpResponseMessage>> _setup;
-
-        private Mock<HttpClient> _httpClientMock;
-        private HttpResponseMessage _responseMessage;
-
-        public HttpClientMockBuilder()
+        _httpClientMock = new Mock<HttpClient>();
+        _setup = _httpClientMock
+            .Setup(httpClient => httpClient.SendAsync(
+                It.IsAny<HttpRequestMessage>(),
+                It.IsAny<CancellationToken>()));
+        _responseMessage = new HttpResponseMessage()
         {
-            _httpClientMock = new Mock<HttpClient>();
-            _setup = _httpClientMock
-                .Setup(httpClient => httpClient.SendAsync(
-                    It.IsAny<HttpRequestMessage>(),
-                    It.IsAny<CancellationToken>()));
-            _responseMessage = new HttpResponseMessage()
-            {
-                StatusCode = HttpStatusCode.BadRequest
-            };
-        }
+            StatusCode = HttpStatusCode.BadRequest
+        };
+    }
 
-        public HttpClientMockBuilder WithResponse(HttpStatusCode httpStatusCode)
+    public HttpClientMockBuilder WithResponse(HttpStatusCode httpStatusCode)
+    {
+        _responseMessage = new HttpResponseMessage
         {
-            _responseMessage = new HttpResponseMessage
-            {
-                StatusCode = httpStatusCode
-            };
+            StatusCode = httpStatusCode
+        };
 
-            return this;
-        }
+        return this;
+    }
 
-        public void Reset()
-        {
-            _httpClientMock = new Mock<HttpClient>();
-        }
+    public void Reset()
+    {
+        _httpClientMock = new Mock<HttpClient>();
+    }
 
-        public Mock<HttpClient> Build()
-        {
-            _setup.ReturnsAsync(_responseMessage);
+    public Mock<HttpClient> Build()
+    {
+        _setup.ReturnsAsync(_responseMessage);
 
-            return _httpClientMock;
-        }
+        return _httpClientMock;
     }
 }

@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Todo.Web.Shared.SharedClasses
-{
-    public class ExternalUserInfo
-    {
-        [Required]
-        public string Username { get; set; } = default!;
+namespace Todo.Web.Shared.SharedClasses;
 
-        [Required]
-        public string KeyProvider { get; set; } = default!;
-    }
+public class ExternalUserInfo
+{
+    [Required]
+    public string Username { get; set; } = default!;
+
+    [Required]
+    public string KeyProvider { get; set; } = default!;
 }

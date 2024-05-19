@@ -1,8 +1,7 @@
-﻿namespace Tests.ClientTests
+﻿namespace Todo.Tests.ClientTests;
+
+public class UserLoginData(string password, string userName)
 {
-    public class UserLoginData(string password, string userName)
-    {
-        public string UserName { get; init; } = userName;
-        public string Password { get; init; } = password;
-    }
+    public string UserName { get; init; } = userName;
+    public string Password { get; init; } = password;
 }

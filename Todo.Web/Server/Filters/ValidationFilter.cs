@@ -8,68 +8,67 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Metadata;
 using MiniValidation;
 
-namespace Todo.Web.Server.Filters
+namespace Todo.Web.Server.Filters;
+
+public static class ValidationFilterExtensions
 {
-    public static class ValidationFilterExtensions
+    public static TBuilder WithParameterValidation<TBuilder>(this TBuilder builder, params Type[] typesToValidate) where TBuilder : IEndpointConventionBuilder
     {
-        public static TBuilder WithParameterValidation<TBuilder>(this TBuilder builder, params Type[] typesToValidate) where TBuilder : IEndpointConventionBuilder
+        builder.Add(eb =>
         {
-            builder.Add(eb =>
+            var methodInfo = eb.Metadata.OfType<MethodInfo>().FirstOrDefault();
+
+            if (methodInfo is null)
             {
-                var methodInfo = eb.Metadata.OfType<MethodInfo>().FirstOrDefault();
+                return;
+            }
 
-                if (methodInfo is null)
+            // Track the indices of validatable parameters
+            List<int>? parameterIndexesToValidate = null;
+            foreach (var p in methodInfo.GetParameters())
+            {
+                if (typesToValidate.Contains(p.ParameterType))
                 {
-                    return;
+                    parameterIndexesToValidate ??= new();
+                    parameterIndexesToValidate.Add(p.Position);
                 }
+            }
 
-                // Track the indices of validatable parameters
-                List<int>? parameterIndexesToValidate = null;
-                foreach (var p in methodInfo.GetParameters())
+            if (parameterIndexesToValidate is null)
+            {
+                // Nothing to validate so don't add the filter to this endpoint
+                return;
+            }
+
+            // We can respond with problem details if there's a validation error
+            eb.Metadata.Add(new ProducesResponseTypeMetadata(typeof(HttpValidationProblemDetails), 400, "application/problem+json"));
+
+            eb.FilterFactories.Add((context, next) =>
+            {
+                return efic =>
                 {
-                    if (typesToValidate.Contains(p.ParameterType))
+                    foreach (var index in parameterIndexesToValidate)
                     {
-                        parameterIndexesToValidate ??= new();
-                        parameterIndexesToValidate.Add(p.Position);
-                    }
-                }
-
-                if (parameterIndexesToValidate is null)
-                {
-                    // Nothing to validate so don't add the filter to this endpoint
-                    return;
-                }
-
-                // We can respond with problem details if there's a validation error
-                eb.Metadata.Add(new ProducesResponseTypeMetadata(typeof(HttpValidationProblemDetails), 400, "application/problem+json"));
-
-                eb.FilterFactories.Add((context, next) =>
-                {
-                    return efic =>
-                    {
-                        foreach (var index in parameterIndexesToValidate)
+                        if (efic.Arguments[index] is { } arg && !MiniValidator.TryValidate(arg, out var errors))
                         {
-                            if (efic.Arguments[index] is { } arg && !MiniValidator.TryValidate(arg, out var errors))
-                            {
-                                return new ValueTask<object?>(Results.ValidationProblem(errors));
-                            }
+                            return new ValueTask<object?>(Results.ValidationProblem(errors));
                         }
+                    }
 
-                        return next(efic);
-                    };
-                });
+                    return next(efic);
+                };
             });
+        });
 
-            return builder;
-        }
+        return builder;
+    }
 
-        // Equivalent to the .Produces call to add metadata to endpoints
-        private sealed class ProducesResponseTypeMetadata(Type type, int statusCode, string contentType)
-            : IProducesResponseTypeMetadata
-        {
-            public Type Type { get; } = type;
-            public int StatusCode { get; } = statusCode;
-            public IEnumerable<string> ContentTypes { get; } = new[] { contentType };
-        }
+    // Equivalent to the .Produces call to add metadata to endpoints
+    private sealed class ProducesResponseTypeMetadata(Type type, int statusCode, string contentType)
+        : IProducesResponseTypeMetadata
+    {
+        public Type Type { get; } = type;
+        public int StatusCode { get; } = statusCode;
+        public IEnumerable<string> ContentTypes { get; } = new[] { contentType };
     }
 }
