@@ -3,8 +3,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0.203-jammy-amd64@sha256:f1fec9720c4d6cc1067aec5516e3742f33e7944baf12b28f7b1850b6f578daed AS build-env
 
-LABEL description="This is BlazorServer image of whole TodoApi application. `
-It is responsible authorization, authentication and database management."
+LABEL description="This is BlazorServer image of whole TodoApi application."
 
 RUN useradd --system --user-group kocurc
 
@@ -27,5 +26,4 @@ COPY --from=build-env OUTPUT_PATH OUTPUT_PATH
 ENTRYPOINT ["dotnet"]
 CMD ["/Out/BlazorServer"]
 
-HEALTHCHECK --interval=5m --timeout=30s --start-period=30s --retries=3 `
-    CMD powershell ./Scripts/HealthCheck.ps1
+HEALTHCHECK --interval=5m --timeout=30s --start-period=30s --retries=3 CMD powershell ./Scripts/HealthCheck.ps1

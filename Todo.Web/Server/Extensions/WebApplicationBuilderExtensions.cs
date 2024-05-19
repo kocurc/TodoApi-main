@@ -63,15 +63,16 @@ public static class WebApplicationBuilderExtensions
                     // Bind this section to the specified options
                     section.Bind(options);
 
-                    // This will save the information in the external cookie
-                    if (options is RemoteAuthenticationOptions remoteAuthenticationOptions)
+                    switch (options)
                     {
-                        remoteAuthenticationOptions.SignInScheme = AuthenticationSchemes.ExternalScheme;
-                    }
-                    else if (options is Auth0WebAppOptions auth0WebAppOptions)
-                    {
-                        // Skip the cookie handler since we already add it
-                        auth0WebAppOptions.SkipCookieMiddleware = true;
+                        // This will save the information in the external cookie
+                        case RemoteAuthenticationOptions remoteAuthenticationOptions:
+                            remoteAuthenticationOptions.SignInScheme = AuthenticationSchemes.ExternalScheme;
+                            break;
+                        case Auth0WebAppOptions auth0WebAppOptions:
+                            // Skip the cookie handler since we already add it
+                            auth0WebAppOptions.SkipCookieMiddleware = true;
+                            break;
                     }
                 });
 
@@ -146,9 +147,7 @@ public static class WebApplicationBuilderExtensions
             })
             .WithTracing(tracing =>
             {
-                // We need to use AlwaysSampler to record spans
-                // from Todo.Web.Server, because there it no OpenTelemetry
-                // instrumentation
+                // We need to use AlwaysSampler to record spans from Todo.Web.Server, because there it no OpenTelemetry instrumentation
                 tracing.SetResourceBuilder(resourceBuilder)
                     .SetSampler(new AlwaysOnSampler())
                     .AddAspNetCoreInstrumentation()

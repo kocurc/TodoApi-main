@@ -20,39 +20,32 @@ public class Program
         var databaseConnectionString = webApplicationBuilder.Configuration.GetConnectionString("SQLiteConnectionString") ?? "Data Source=.db/TodoApi.db";
 
         // ADD SERVICES TO THE APPLICATION
-        // Who you are
+        // Configures who you are
         webApplicationBuilder.AddAuthentication();
-        // What you can do
+        // Configures what you can do
         webApplicationBuilder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
         // Use SQLLite as the database
         webApplicationBuilder.Services.AddSqlite<TodoDbContext>(databaseConnectionString);
         // Add support for Razor C#-HTML pages
         webApplicationBuilder.Services.AddRazorPages();
+        // Configures logging, distributed tracing and scraping metrics, for instance using Prometheus
+        webApplicationBuilder.AddOpenTelemetry();
 
         // ADD SINGLETON SERVICES. THEY CREATED ONCE PER APPLICATION AND EVERY REQUEST USES THE SAME INSTANCE
         // Add the service to generate JWT tokens
         webApplicationBuilder.Services.AddSingleton<ITokenService, TokenService>();
 
-        // Configure OpenTelemetry
-        webApplicationBuilder.AddOpenTelemetry();
 
-
-        // Configure rate limiting
+        //----------------------------------------------------------
         webApplicationBuilder.Services.AddRateLimiting();
-
-        // Configure Open API
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
         webApplicationBuilder.Services.AddSwaggerGen(o => o.InferSecuritySchemes());
-
         // Configure identity
         webApplicationBuilder.Services.AddIdentityCore<TodoUser>()
             .AddEntityFrameworkStores<TodoDbContext>();
-
         // State that represents the current user from the database *and* the request
         webApplicationBuilder.Services.AddCurrentUser();
-
         var app = webApplicationBuilder.Build();
-
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -65,7 +58,6 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
         app.UseHttpsRedirection();
         app.UseBlazorFrameworkFiles();
         app.UseStaticFiles();
@@ -73,23 +65,18 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapFallbackToPage("/_Host");
-
         // Configure the prometheus endpoint for scraping metrics
         // NOTE: This should only be exposed on an internal port!
         // .RequireHost("*:9100");
-
         app.MapPrometheusScrapingEndpoint();
-
         // Configure the APIs
         app.MapAuth();
         app.MapTodos("null");
         // app.MapTodos();
         app.MapUsers();
-
         app.UseRateLimiter();
         // app.Map("/", () => Results.Redirect("/swagger"));
         // app.Map("/", () => Results.Redirect("/"));
-
         // https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
         app.UseSecurityHeaders(policies => policies
             .AddFrameOptionsDeny() // Prevents the page from being displayed in an iframe or object.
@@ -118,7 +105,6 @@ public class Program
                 builder.SameOrigin(); // The builder property `SameOrigin()` allows the policy to only apply to the same origin.
             })
             .AddCustomHeader("X-My-Test-Header", "Test header value")); // Adds a custom header named `X-My-Test-Header` with the value `Test header value` only for testing purpose.
-
         // Run application
         app.Run();
     }
