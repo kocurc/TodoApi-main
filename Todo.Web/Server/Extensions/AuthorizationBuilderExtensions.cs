@@ -13,9 +13,8 @@ public static class AuthorizationBuilderExtensions
         return builder;
     }
 
-    // Adds the current user requirement that will activate our authorization handler
     public static AuthorizationPolicyBuilder RequireCurrentUser(this AuthorizationPolicyBuilder builder)
     {
-        return builder.RequireAuthenticatedUser().AddRequirements(new CheckCurrentUserRequirement());
+        return builder.RequireAuthenticatedUser().AddRequirements(new CurrentUserRequirement());
     }
 }

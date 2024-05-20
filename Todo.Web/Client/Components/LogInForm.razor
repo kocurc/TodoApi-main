@@ -39,7 +39,7 @@
 
     [Required] 
     [StringLength(32, MinimumLength = 6, ErrorMessage = "The password must be between 6 and 32 characters long.")]
-    [RegularExpression("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[^a-zA-Z\\d]).*$", 
+    [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[^a-zA-Z\d]).*$", 
         MatchTimeoutInMilliseconds = 1000,
         ErrorMessage = "The password must contain a lower-case letter, an upper-case letter, a digit and a special character.")]
     public string? Password { get; set; }
@@ -48,7 +48,7 @@
     public EventCallback<string> OnLoggedIn { get; set; }
 
     [Parameter]
-    public string[] SocialProviders { get; set; } = Array.Empty<string>();
+    public string[] SocialProviders { get; set; } = [];
 
     async Task Login()
     {

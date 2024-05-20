@@ -5,12 +5,10 @@ using Microsoft.OpenApi.Models;
 
 namespace Todo.Web.Server.Extensions;
 
-// ReSharper disable once InconsistentNaming
 public static class IEndpointConventionBuilderExtensions
 {
     private const string Policy = "PerUserRatelimit";
 
-    // Adds the JWT security scheme to the Open API description
     public static IEndpointConventionBuilder AddOpenApiSecurityRequirement(this IEndpointConventionBuilder builder)
     {
         var scheme = new OpenApiSecurityScheme()
@@ -41,5 +39,4 @@ public static class IEndpointConventionBuilderExtensions
     {
         return builder.RequireRateLimiting(Policy);
     }
-
 }

@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Todo.Tests.Extensions;
 using Todo.Web.Server;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Database;
@@ -40,6 +41,7 @@ public class TodoApplication : WebApplicationFactory<Program>
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TodoUser>>();
         var newUser = new TodoUser { UserName = username };
         var result = await userManager.CreateAsync(newUser, password ?? Guid.NewGuid().ToString());
+
         Assert.True(result.Succeeded);
     }
 
@@ -48,24 +50,18 @@ public class TodoApplication : WebApplicationFactory<Program>
         return CreateDefaultClient(new AuthHandler(req =>
         {
             var token = CreateToken(id, isAdmin);
+
             req.Headers.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, token);
         }));
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        // Open the connection, this creates the SQLite in-memory database, which will persist until the connection is closed
         _sqliteConnection.Open();
-
         builder.ConfigureServices(services =>
         {
-            // We're going to use the factory from our tests
             services.AddDbContextFactory<TodoDbContext>();
-
-            // We need to replace the configuration for the DbContext to use a different configured database
-            services.AddDbContextOptions<TodoDbContext>(o => SqliteDbContextOptionsBuilderExtensions.UseSqlite<TodoDbContext>(o, _sqliteConnection));
-
-            // Lower the requirements for the tests
+            services.AddDbContextOptions<TodoDbContext>(dbContextOptionsBuilder => dbContextOptionsBuilder.UseSqlite(_sqliteConnection));
             services.Configure<IdentityOptions>(o =>
             {
                 o.Password.RequireNonAlphanumeric = false;
@@ -77,12 +73,10 @@ public class TodoApplication : WebApplicationFactory<Program>
             });
         });
 
-        // We need to configure signing keys for CI scenarios where
-        // there's no user-jwts tool
         var keyBytes = new byte[32];
-        RandomNumberGenerator.Fill(keyBytes);
         var base64Key = Convert.ToBase64String(keyBytes);
 
+        RandomNumberGenerator.Fill(keyBytes);
         builder.ConfigureAppConfiguration(config =>
         {
             config.AddInMemoryCollection(new Dictionary<string, string?>
@@ -97,8 +91,6 @@ public class TodoApplication : WebApplicationFactory<Program>
 
     private string CreateToken(string id, bool isAdmin = false)
     {
-        // Read the user JWTs configuration for testing so unit tests can generate
-        // JWT tokens.
         var tokenService = Services.GetRequiredService<ITokenService>();
 
         return tokenService.GenerateToken(id, isAdmin);
@@ -106,23 +98,9 @@ public class TodoApplication : WebApplicationFactory<Program>
 
     protected override void Dispose(bool disposing)
     {
-        _sqliteConnection?.Dispose();
+        _sqliteConnection.Dispose();
         base.Dispose(disposing);
     }
 
-    private sealed class AuthHandler : DelegatingHandler
-    {
-        private readonly Action<HttpRequestMessage> _onRequest;
 
-        public AuthHandler(Action<HttpRequestMessage> onRequest)
-        {
-            _onRequest = onRequest;
-        }
-
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            _onRequest(request);
-            return base.SendAsync(request, cancellationToken);
-        }
-    }
 }

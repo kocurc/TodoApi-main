@@ -1,7 +1,7 @@
 ﻿@using Todo.Web.Shared.SharedClasses
 @inject TodoClient Client
 
-@if (todos is null)
+@if (_todos is null)
 {
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="spinner-border" role="status"></div>
@@ -11,7 +11,7 @@ else
 {
     <h6 class="mb-3">Todo List</h6>
 
-    <EditForm @ref="@form" Model="@this" OnValidSubmit="@AddTodo" class="d-flex justify-content-center align-items-center mb-4">
+    <EditForm @ref="@_form" Model="@this" OnValidSubmit="@AddTodo" class="d-flex justify-content-center align-items-center mb-4">
         <DataAnnotationsValidator />
         <div class="form-outline flex-fill">
             <InputText autofocus class="form-control form-control-lg" @bind-Value="@NewTodo" placeholder="Type a new todo item" />
@@ -20,7 +20,7 @@ else
     </EditForm>
 
     <ul class="list-group mb-0">
-        @foreach (var todo in todos)
+        @foreach (var todo in _todos)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2" @key="@todo.Id">
                 <div class="d-flex align-items-center">
@@ -34,8 +34,8 @@ else
 }
 
 @code {
-    List<TodoItem>? todos;
-    EditForm? form;
+    List<TodoItem>? _todos;
+    EditForm? _form;
 
     [Required]
     public string? NewTodo { get; set; }
@@ -50,9 +50,9 @@ else
 
     async Task LoadTodos()
     {
-        (var statusCode, todos) = await Client.GetTodosAsync();
+        (var statusCode, _todos) = await Client.GetTodosAsync();
 
-        if (statusCode == HttpStatusCode.Forbidden || statusCode == HttpStatusCode.Unauthorized)
+        if (statusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
             await OnForbidden.InvokeAsync();
         }
@@ -61,11 +61,13 @@ else
     async Task AddTodo()
     {
         var createdTodo = await Client.AddTodoAsync(NewTodo);
+
         if (createdTodo is not null)
         {
             NewTodo = null;
-            form!.EditContext!.MarkAsUnmodified();
-            todos!.Add(createdTodo);
+
+            _form!.EditContext!.MarkAsUnmodified();
+            _todos!.Add(createdTodo);
         }
     }
 
@@ -73,7 +75,7 @@ else
     {
         if (await Client.DeleteTodoAsync(todo.Id))
         {
-            todos!.Remove(todo);
+            _todos!.Remove(todo);
         }
     }
 }

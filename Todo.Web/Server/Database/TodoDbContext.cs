@@ -15,7 +15,6 @@ public class TodoDbContext(DbContextOptions<TodoDbContext> options) : IdentityDb
             .WithMany()
             .HasForeignKey(t => t.OwnerId)
             .HasPrincipalKey(u => u.UserName);
-
         base.OnModelCreating(builder);
     }
 }

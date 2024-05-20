@@ -15,14 +15,11 @@ public class TodoClientTests
     [Fact]
     public async Task GivenUnsanitizedUserNameAndPassword_ThenShouldSanitizeUserNameAndPassword()
     {
-        // Arrange
         var userLoginData = new UserLoginData("<script>alert('xss')</script>John", "<img src=\"javascript:alert('XSS');\">Password");
         var todoClient = new TodoClient(_httpClientMockBuilder.WithResponse(HttpStatusCode.OK).Build().Object, new HtmlSanitizer());
 
-        // Act
         var loginResponse = await todoClient.LoginAsync(userLoginData.UserName, userLoginData.Password);
 
-        // Assert
         loginResponse.ShouldBeTrue();
     }
 }

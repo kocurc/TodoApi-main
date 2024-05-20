@@ -9,22 +9,20 @@ using static Todo.Web.Server.Authorization.CurrentUserAuthorization;
 
 namespace Todo.Web.Server.Extensions;
 
-// ReSharper disable once InconsistentNaming
 public static class IServiceCollectionExtensions
 {
-    private const string Policy = "PerUserRatelimit";
+    private const string PolicyName = "PerUserRatelimit";
 
     public static IServiceCollection AddRateLimiting(this IServiceCollection services)
     {
         return services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.AddPolicy(Policy, context =>
+            options.AddPolicy(PolicyName, context =>
             {
-                // We always have a username
                 var username = context.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-                return RateLimitPartition.GetTokenBucketLimiter(username, key => new()
+                return RateLimitPartition.GetTokenBucketLimiter(username, key => new TokenBucketRateLimiterOptions
                 {
                     ReplenishmentPeriod = TimeSpan.FromSeconds(10),
                     AutoReplenishment = true,

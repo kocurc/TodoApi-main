@@ -17,30 +17,14 @@ public sealed class TokenService : ITokenService
 
     public TokenService(IAuthenticationConfigurationProvider authenticationConfigurationProvider)
     {
-        // We're reading the authentication configuration for the Bearer scheme
         var bearerSection = authenticationConfigurationProvider.GetSchemeConfiguration(JwtBearerDefaults.AuthenticationScheme);
-
-        // An example of what the expected schema looks like
-        // "Authentication": {
-        //     "Schemes": {
-        //       "Bearer": {
-        //         "ValidAudiences": [ ],
-        //         "ValidIssuer": "",
-        //         "SigningKeys": [ { "Issuer": .., "Value": base64Key, "Length": 32 } ]
-        //       }
-        //     }
-        //   }
-
         var section = bearerSection.GetSection("SigningKeys:0");
-
-        _issuer = bearerSection["ValidIssuer"] ?? throw new InvalidOperationException("Issuer is not specified");
         var signingKeyBase64 = section["Value"] ?? throw new InvalidOperationException("Signing key is not specified");
-
         var signingKeyBytes = Convert.FromBase64String(signingKeyBase64);
 
+        _issuer = bearerSection["ValidIssuer"] ?? throw new InvalidOperationException("Issuer is not specified");
         _jwtSigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKeyBytes),
             SecurityAlgorithms.HmacSha256Signature);
-
         _audiences = bearerSection.GetSection("ValidAudiences").GetChildren()
             .Where(s => !string.IsNullOrEmpty(s.Value))
             .Select(s => new Claim(JwtRegisteredClaimNames.Aud, s.Value!))
@@ -50,12 +34,9 @@ public sealed class TokenService : ITokenService
     public string GenerateToken(string username, bool isAdmin = false)
     {
         var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
-
-        identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, username));
-
-        // REVIEW: Check that this logic is OK for jti claims
         var id = Guid.NewGuid().ToString().GetHashCode().ToString("x", CultureInfo.InvariantCulture);
 
+        identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, username));
         identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, id));
 
         if (isAdmin)
@@ -66,7 +47,6 @@ public sealed class TokenService : ITokenService
         identity.AddClaims(_audiences);
 
         var handler = new JwtSecurityTokenHandler();
-
         var jwtToken = handler.CreateJwtSecurityToken(
             _issuer,
             audience: null,

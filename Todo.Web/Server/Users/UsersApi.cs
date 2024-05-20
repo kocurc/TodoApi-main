@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Todo.Web.Server.Authentication;
-using Todo.Web.Server.Filters;
+using Todo.Web.Server.Extensions;
 using Todo.Web.Shared.SharedClasses;
 
 namespace Todo.Web.Server.Users;
@@ -17,13 +17,11 @@ public static class UsersApi
     {
         var group = routes.MapGroup("/users");
 
-        group.WithTags("Users");
-
-        group.WithParameterValidation(typeof(UserInfo), typeof(ExternalUserInfo));
-
-        group.MapPost("/", async Task<Results<Ok, ValidationProblem>> (UserInfo newUser, UserManager<TodoUser> userManager) =>
+        _ = group.WithTags("Users");
+        _ = group.WithParameterValidation(typeof(UserInfo), typeof(ExternalUserInfo));
+        _ = group.MapPost("/", async Task<Results<Ok, ValidationProblem>> (UserInfo newUser, UserManager<TodoUser> userManager) =>
         {
-            var result = await userManager.CreateAsync(new() { UserName = newUser.Username }, newUser.Password);
+            var result = await userManager.CreateAsync(new TodoUser { UserName = newUser.Username }, newUser.Password);
 
             if (result.Succeeded)
             {
@@ -32,8 +30,7 @@ public static class UsersApi
 
             return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
         });
-
-        group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        _ = group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
         {
             var user = await userManager.FindByNameAsync(userInfo.Username);
 
@@ -44,8 +41,7 @@ public static class UsersApi
 
             return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
         });
-
-        group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        _ = group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
         {
             var user = await userManager.FindByLoginAsync(provider, userInfo.ProviderKey);
 

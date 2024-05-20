@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -21,46 +22,41 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users", new UserInfo { Username = "todouser", Password = "@pwd" });
+        var user = db.Users.Single();
 
         Assert.True(response.IsSuccessStatusCode);
-
-        var user = db.Users.Single();
         Assert.NotNull(user);
-
         Assert.Equal("todouser", user.UserName);
     }
+
+    private static readonly string[] Expected = ["The Password field is required."];
+    private static readonly string[] ExpectedDetails = ["The Username field is required."];
 
     [Fact]
     public async Task MissingUserOrPasswordReturnsBadRequest()
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users", new UserInfo { Username = "todouser", Password = "" });
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.NotNull(problemDetails);
-
         Assert.Equal("One or more validation errors occurred.", problemDetails.Title);
         Assert.NotEmpty(problemDetails.Errors);
-        Assert.Equal(new[] { "The Password field is required." }, problemDetails.Errors["Password"]);
+        Assert.Equal(Expected, problemDetails.Errors["Password"]);
 
         response = await client.PostAsJsonAsync("/users", new UserInfo { Username = "", Password = "password" });
+        problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-        problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.NotNull(problemDetails);
-
         Assert.Equal("One or more validation errors occurred.", problemDetails.Title);
         Assert.NotEmpty(problemDetails.Errors);
-        Assert.Equal(new[] { "The Username field is required." }, problemDetails.Errors["Username"]);
+        Assert.Equal(ExpectedDetails, problemDetails.Errors["Username"]);
     }
 
     [Fact]
@@ -68,26 +64,21 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { Username = "todouser" });
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.NotNull(problemDetails);
-
         Assert.Equal("One or more validation errors occurred.", problemDetails.Title);
         Assert.NotEmpty(problemDetails.Errors);
         Assert.Equal(new[] { $"The {nameof(ExternalUserInfo.ProviderKey)} field is required." }, problemDetails.Errors[nameof(ExternalUserInfo.ProviderKey)]);
 
         response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { ProviderKey = "somekey" });
+        problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-        problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.NotNull(problemDetails);
-
         Assert.Equal("One or more validation errors occurred.", problemDetails.Title);
         Assert.NotEmpty(problemDetails.Errors);
         Assert.Equal(new[] { $"The Username field is required." }, problemDetails.Errors["Username"]);
@@ -99,20 +90,16 @@ public class UserApiTests
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync("todouser", "p@assw0rd1");
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token", new UserInfo { Username = "todouser", Password = "p@assw0rd1" });
-
-        Assert.True(response.IsSuccessStatusCode);
-
         var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
+        Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(token);
 
-        // Check that the token is indeed valid
-
         var req = new HttpRequestMessage(HttpMethod.Get, "/todos");
-        req.Headers.Authorization = new("Bearer", token.Token);
+
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         response = await client.SendAsync(req);
 
         Assert.True(response.IsSuccessStatusCode);
@@ -123,27 +110,23 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { Username = "todouser", ProviderKey = "1003" });
-
-        Assert.True(response.IsSuccessStatusCode);
-
         var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
+        Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(token);
 
-        // Check that the token is indeed valid
-
         var req = new HttpRequestMessage(HttpMethod.Get, "/todos");
-        req.Headers.Authorization = new("Bearer", token.Token);
-        response = await client.SendAsync(req);
 
-        Assert.True(response.IsSuccessStatusCode);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+        response = await client.SendAsync(req);
 
         using var scope = application.Services.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TodoUser>>();
         var user = await userManager.FindByLoginAsync("Google", "1003");
+
+        Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(user);
         Assert.Equal("todouser", user.UserName);
     }
@@ -154,7 +137,6 @@ public class UserApiTests
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync("todouser", "p@assw0rd1");
-
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token", new UserInfo { Username = "todouser", Password = "prd1" });
 

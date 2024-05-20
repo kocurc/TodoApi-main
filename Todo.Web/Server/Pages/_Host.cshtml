@@ -1,8 +1,5 @@
-﻿@* OK. @page makes the file addressable page. *@
-@page
-@* @model specifies the model for this Razor page - a C# class where data for the page is handled. *@
+﻿@page
 @model Todo.Web.Server.Pages.IndexModel
-@* @addTagHelper directive adds all tag helpers from the specified assembly. *@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -11,20 +8,15 @@
 <head>
     <meta charset="utf-8" />
     <title>Todo list application</title>
-    <!-- base URL for all relative URLs -->
     <base href="/" />
     <link rel="stylesheet" href="~/bootstrap/dist/css/bootstrap.min.css" />
     <link href="css/app.css" rel="stylesheet" />
-    <!-- If you add any scoped CSS files, uncomment the following to load them
-    <link href="Todo.Web.Client.styles.css" rel="stylesheet" /> -->
 </head>
 
 <body>
 
     <div class="container">
         <main role="main" class="pb-3">
-            <!-- The below lines render TodoApp Blazor component. Component is rendered on the client side, 
-            using WebAssembly. -->
             <component type="typeof(Todo.Web.Client.TodoApp)" 
                        param-CurrentUserAuthorizationName="@Model.CurrentUserName"
                        param-SocialProviders="@Model.ProviderNames" 
@@ -32,16 +24,13 @@
         </main>
     </div>
 
-    <!-- Display error message if an unhandled error occurs -->
     <div id="blazor-error-ui">
         An unhandled error has occurred. Reload the page to try again.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
 
-    <!-- Load Blazor WebAssembly. -->
     <script src="_framework/blazor.webassembly.js"></script>
-    <!-- Load the SignalR client library. -->
     <script src="~/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

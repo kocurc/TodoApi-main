@@ -23,6 +23,8 @@ public class Program
         webApplicationBuilder.AddAuthentication();
         // Configures logging, distributed tracing and scraping metrics, for instance using Prometheus
         webApplicationBuilder.AddOpenTelemetry();
+        // Adds service that can generate Swagger documents for your API. InferSecuritySchemes infers the security schemes from the authorization policies - JWT Bearer in this case
+        webApplicationBuilder.AddSwaggerGen();
         // Configures what you can do
         webApplicationBuilder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
         // Use SQLLite as the database
@@ -35,17 +37,15 @@ public class Program
         // ADD SINGLETON SERVICES. THEY CREATED ONCE PER APPLICATION AND EVERY REQUEST USES THE SAME INSTANCE
         // Add the service to generate JWT tokens
         webApplicationBuilder.Services.AddSingleton<ITokenService, TokenService>();
+        // Enable API Explorer for OpenAPI documentation for the endpoints defined in your application using the Map methods, like MapPost in the IEndpointRouteBuilder interface
+        webApplicationBuilder.Services.AddEndpointsApiExplorer();
 
         //----------------------------------------------------------
-        webApplicationBuilder.Services.AddEndpointsApiExplorer();
-        webApplicationBuilder.Services.AddSwaggerGen(o => o.InferSecuritySchemes());
-        // Configure identity
-        webApplicationBuilder.Services.AddIdentityCore<TodoUser>()
-            .AddEntityFrameworkStores<TodoDbContext>();
-        // State that represents the current user from the database *and* the request
+        webApplicationBuilder.Services.AddIdentityCore<TodoUser>().AddEntityFrameworkStores<TodoDbContext>();
         webApplicationBuilder.Services.AddCurrentUser();
+
         var app = webApplicationBuilder.Build();
-        // Configure the HTTP request pipeline.
+
         if (app.Environment.IsDevelopment())
         {
             app.UseWebAssemblyDebugging();
@@ -54,7 +54,6 @@ public class Program
         }
         else
         {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
         app.UseHttpsRedirection();
@@ -64,47 +63,37 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapFallbackToPage("/_Host");
-        // Configure the prometheus endpoint for scraping metrics
-        // NOTE: This should only be exposed on an internal port!
-        // .RequireHost("*:9100");
         app.MapPrometheusScrapingEndpoint();
-        // Configure the APIs
         app.MapAuth();
         app.MapTodos("null");
-        // app.MapTodos();
         app.MapUsers();
         app.UseRateLimiter();
-        // app.Map("/", () => Results.Redirect("/swagger"));
-        // app.Map("/", () => Results.Redirect("/"));
-        // https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders
         app.UseSecurityHeaders(policies => policies
-            .AddFrameOptionsDeny() // Prevents the page from being displayed in an iframe or object.
-            .AddXssProtectionBlock() // Enables XSS filtering. If a cross-site scripting attack is detected, the browser will stop rendering the page.
-            .AddContentTypeOptionsNoSniff() // Prevents the browser from MIME-sniffing a response away from the declared content-type.
+            .AddFrameOptionsDeny()
+            .AddXssProtectionBlock()
             .AddStrictTransportSecurityMaxAgeIncludeSubDomains(
-                maxAgeInSeconds: 60 * 60 * 24 * 365) // Enforces secure (HTTP over SSL/TLS) connections to the server. This header also includes subdomains and is set for one year.
-            .AddReferrerPolicyStrictOriginWhenCrossOrigin() // Provides the origin of the document as the referrer when the protocol security level stays the same or improves (HTTP to HTTPS), but doesn't send it for a less secure destination (HTTPS to HTTP).
-            .RemoveServerHeader() // Removes the `Server` header from the response.
-            .AddContentSecurityPolicy(builder => // Sets the `Content-Security-Policy` header, which helps prevent a wide range of content injection attacks such as cross-site scripting (XSS).
+                maxAgeInSeconds: 60 * 60 * 24 * 365)
+            .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+            .RemoveServerHeader()
+            .AddContentSecurityPolicy(builder =>
             {
-                builder.AddObjectSrc().None(); // Prevents the page from loading any objects.
-                builder.AddFormAction().Self(); // Allows form submissions only to the same origin.
-                builder.AddFrameAncestors().None(); // Prevents the page from being embedded in an iframe or object on any site.
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self();
+                builder.AddFrameAncestors().None();
             })
-            .AddCrossOriginOpenerPolicy(builder => // Sets the `Cross-Origin-Opener-Policy` header, which isolates your site from other sites in a new browsing context.
+            .AddCrossOriginOpenerPolicy(builder =>
             {
-                builder.SameOrigin(); // The builder property `SameOrigin()` allows the policy to only apply to the same origin.
+                builder.SameOrigin();
             })
-            .AddCrossOriginEmbedderPolicy(builder => // Sets the `Cross-Origin-Embedder-Policy` header, which requires all resources to be loaded securely and ensures your site is isolated from other sites in a new browsing context.
+            .AddCrossOriginEmbedderPolicy(builder =>
             {
-                builder.RequireCorp(); // The builder property `RequireCorp()` requires the policy to apply to all corporate networks.
+                builder.RequireCorp();
             })
-            .AddCrossOriginResourcePolicy(builder => // Sets the `Cross-Origin-Resource-Policy` header, which controls the set of origins that are allowed to get your site's resources.
+            .AddCrossOriginResourcePolicy(builder =>
             {
-                builder.SameOrigin(); // The builder property `SameOrigin()` allows the policy to only apply to the same origin.
+                builder.SameOrigin();
             })
-            .AddCustomHeader("X-My-Test-Header", "Test header value")); // Adds a custom header named `X-My-Test-Header` with the value `Test header value` only for testing purpose.
-        // Run application
+            .AddCustomHeader("X-My-Test-Header", "Test header value"));
         app.Run();
     }
 }

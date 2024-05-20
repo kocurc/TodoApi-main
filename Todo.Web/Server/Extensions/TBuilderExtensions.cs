@@ -5,12 +5,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Metadata;
 using MiniValidation;
+using ProducesResponseTypeMetadata = Todo.Web.Server.Filters.ProducesResponseTypeMetadata;
 
-namespace Todo.Web.Server.Filters;
+namespace Todo.Web.Server.Extensions;
 
-public static class ValidationFilterExtensions
+public static class TBuilderExtensions
 {
     public static TBuilder WithParameterValidation<TBuilder>(this TBuilder builder, params Type[] typesToValidate) where TBuilder : IEndpointConventionBuilder
     {
@@ -23,52 +23,42 @@ public static class ValidationFilterExtensions
                 return;
             }
 
-            // Track the indices of validatable parameters
             List<int>? parameterIndexesToValidate = null;
+
             foreach (var p in methodInfo.GetParameters())
             {
-                if (typesToValidate.Contains(p.ParameterType))
+                if (!typesToValidate.Contains(p.ParameterType))
                 {
-                    parameterIndexesToValidate ??= new();
-                    parameterIndexesToValidate.Add(p.Position);
+                    continue;
                 }
+
+                parameterIndexesToValidate ??= [];
+                parameterIndexesToValidate.Add(p.Position);
             }
 
             if (parameterIndexesToValidate is null)
             {
-                // Nothing to validate so don't add the filter to this endpoint
                 return;
             }
 
-            // We can respond with problem details if there's a validation error
             eb.Metadata.Add(new ProducesResponseTypeMetadata(typeof(HttpValidationProblemDetails), 400, "application/problem+json"));
-
             eb.FilterFactories.Add((context, next) =>
             {
-                return efic =>
+                return endpointFilterInvocationContext =>
                 {
                     foreach (var index in parameterIndexesToValidate)
                     {
-                        if (efic.Arguments[index] is { } arg && !MiniValidator.TryValidate(arg, out var errors))
+                        if (endpointFilterInvocationContext.Arguments[index] is { } arg && !MiniValidator.TryValidate(arg, out var errors))
                         {
                             return new ValueTask<object?>(Results.ValidationProblem(errors));
                         }
                     }
 
-                    return next(efic);
+                    return next(endpointFilterInvocationContext);
                 };
             });
         });
 
         return builder;
-    }
-
-    // Equivalent to the .Produces call to add metadata to endpoints
-    private sealed class ProducesResponseTypeMetadata(Type type, int statusCode, string contentType)
-        : IProducesResponseTypeMetadata
-    {
-        public Type Type { get; } = type;
-        public int StatusCode { get; } = statusCode;
-        public IEnumerable<string> ContentTypes { get; } = new[] { contentType };
     }
 }

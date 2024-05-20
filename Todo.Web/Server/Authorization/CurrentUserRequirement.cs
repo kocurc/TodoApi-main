@@ -2,4 +2,4 @@
 
 namespace Todo.Web.Server.Authorization;
 
-public class CheckCurrentUserRequirement : IAuthorizationRequirement;
+public class CurrentUserRequirement : IAuthorizationRequirement;
