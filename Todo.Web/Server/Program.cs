@@ -43,57 +43,35 @@ public class Program
         //----------------------------------------------------------
         webApplicationBuilder.Services.AddIdentityCore<TodoUser>().AddEntityFrameworkStores<TodoDbContext>();
         webApplicationBuilder.Services.AddCurrentUser();
+        webApplicationBuilder.Services.AddHttpClient();
+        webApplicationBuilder.Services.AddScoped<AuthClient>();
 
-        var app = webApplicationBuilder.Build();
+        var webApplication = webApplicationBuilder.Build();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseWebAssemblyDebugging();
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-        else
-        {
-            app.UseHsts();
-        }
-        app.UseHttpsRedirection();
-        app.UseBlazorFrameworkFiles();
-        app.UseStaticFiles();
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.MapFallbackToPage("/_Host");
-        app.MapPrometheusScrapingEndpoint();
-        app.MapAuth();
-        app.MapTodos();
-        app.MapUsers();
-        app.UseRateLimiter();
-        app.UseSecurityHeaders(policies => policies
-            .AddFrameOptionsDeny()
-            .AddXssProtectionBlock()
-            .AddStrictTransportSecurityMaxAgeIncludeSubDomains(
-                maxAgeInSeconds: 60 * 60 * 24 * 365)
-            .AddReferrerPolicyStrictOriginWhenCrossOrigin()
-            .RemoveServerHeader()
-            .AddContentSecurityPolicy(builder =>
-            {
-                builder.AddObjectSrc().None();
-                builder.AddFormAction().Self();
-                builder.AddFrameAncestors().None();
-            })
-            .AddCrossOriginOpenerPolicy(builder =>
-            {
-                builder.SameOrigin();
-            })
-            .AddCrossOriginEmbedderPolicy(builder =>
-            {
-                builder.RequireCorp();
-            })
-            .AddCrossOriginResourcePolicy(builder =>
-            {
-                builder.SameOrigin();
-            })
-            .AddCustomHeader("X-My-Test-Header", "Test header value"));
-        app.Run();
+#if DEBUG
+        webApplication.UseWebAssemblyDebugging();
+        webApplication.UseSwagger();
+        webApplication.UseSwaggerUI();
+#else
+            webApplication.UseHsts();
+#endif
+
+        webApplication.UseHttpsRedirection();
+        webApplication.UseBlazorFrameworkFiles();
+        webApplication.UseStaticFiles();
+        webApplication.UseRouting();
+        webApplication.UseAuthentication();
+        webApplication.UseAuthorization();
+        webApplication.MapFallbackToPage("/_Host");
+        webApplication.MapPrometheusScrapingEndpoint();
+        webApplication.MapAuth();
+        webApplication.MapTodos();
+        webApplication.MapUsers();
+        webApplication.UseRateLimiter();
+        webApplication.UseSecurityHeadersPolicies();
+        ////----------------------------------------------------------
+
+        // Run the application
+        webApplication.Run();
     }
 }
