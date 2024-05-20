@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Web.Server.Filters;
 using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
@@ -15,28 +14,20 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Database;
 using CurrentUser = Todo.Web.Server.Authorization.CurrentUser;
-using Todo.Web.Server.Todos;
+using Todo.Web.Shared.SharedClasses;
+using Microsoft.AspNetCore.Identity;
+using Todo.Web.Server.Users;
+using AuthenticationToken = Todo.Web.Shared.SharedClasses.AuthenticationToken;
 
 namespace Todo.Web.Server.Extensions;
 
 public static class IEndpointRouteBuilderExtensions
 {
-    public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes, string todoUrl)
+    public static RouteGroupBuilder MapTodos(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/todos");
-        var transformBuilder = routes.ServiceProvider.GetRequiredService<ITransformBuilder>();
-        var transform = transformBuilder.Create(b =>
-        {
-            b.AddRequestTransform(async c =>
-            {
-                var accessToken = await c.HttpContext.GetTokenAsync(TokenNames.AccessToken);
-
-                c.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            });
-        });
 
         group.RequireAuthorization();
-        group.MapForwarder("{*path}", todoUrl, new ForwarderRequestConfig(), transform);
         group.WithTags("Todos");
         group.RequireAuthorization(pb => pb.RequireCurrentUser())
             .AddOpenApiSecurityRequirement();
@@ -50,7 +41,7 @@ public static class IEndpointRouteBuilderExtensions
         {
             return await db.Todos.FindAsync(id) switch
             {
-                Todos.Todo todo when todo.OwnerId == owner.Id || owner.IsAdmin => TypedResults.Ok(todo.AsTodoItem()),
+                { } todo when todo.OwnerId == owner.Id || owner.IsAdmin => TypedResults.Ok(todo.AsTodoItem()),
                 _ => TypedResults.NotFound()
             };
         });
@@ -87,6 +78,63 @@ public static class IEndpointRouteBuilderExtensions
                 .ExecuteDeleteAsync();
 
             return rowsAffected == 0 ? TypedResults.NotFound() : TypedResults.Ok();
+        });
+
+        return group;
+    }
+
+    public static RouteGroupBuilder MapUsers(this IEndpointRouteBuilder routes)
+    {
+        var group = routes.MapGroup("/users");
+
+        _ = group.WithTags("Users");
+        _ = group.WithParameterValidation(typeof(UserInfo), typeof(ExternalUserInfo));
+        _ = group.MapPost("/", async Task<Results<Ok, ValidationProblem>> (UserInfo newUser, UserManager<TodoUser> userManager) =>
+        {
+            var result = await userManager.CreateAsync(new TodoUser { UserName = newUser.Username }, newUser.Password);
+
+            if (result.Succeeded)
+            {
+                return TypedResults.Ok();
+            }
+
+            return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
+        });
+        _ = group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        {
+            var user = await userManager.FindByNameAsync(userInfo.Username);
+
+            if (user is null || !await userManager.CheckPasswordAsync(user, userInfo.Password))
+            {
+                return TypedResults.BadRequest();
+            }
+
+            return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
+        });
+        _ = group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        {
+            var user = await userManager.FindByLoginAsync(provider, userInfo.KeyProvider);
+
+            var result = IdentityResult.Success;
+
+            if (user is null)
+            {
+                user = new TodoUser() { UserName = userInfo.Username };
+
+                result = await userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    result = await userManager.AddLoginAsync(user, new UserLoginInfo(provider, userInfo.KeyProvider, displayName: null));
+                }
+            }
+
+            if (result.Succeeded)
+            {
+                return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
+            }
+
+            return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
         });
 
         return group;

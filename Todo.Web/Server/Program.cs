@@ -65,7 +65,7 @@ public class Program
         app.MapFallbackToPage("/_Host");
         app.MapPrometheusScrapingEndpoint();
         app.MapAuth();
-        app.MapTodos("null");
+        app.MapTodos();
         app.MapUsers();
         app.UseRateLimiter();
         app.UseSecurityHeaders(policies => policies

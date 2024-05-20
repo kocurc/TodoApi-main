@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Todo.Web.Server.Users;
 using Todo.Web.Shared.SharedClasses;
 using Xunit;
-using AuthenticationToken = Todo.Web.Server.Users.AuthenticationToken;
-using ExternalUserInfo = Todo.Web.Server.Users.ExternalUserInfo;
 
 namespace Todo.Tests.ApiTests;
 
@@ -72,9 +70,9 @@ public class UserApiTests
         Assert.NotNull(problemDetails);
         Assert.Equal("One or more validation errors occurred.", problemDetails.Title);
         Assert.NotEmpty(problemDetails.Errors);
-        Assert.Equal(new[] { $"The {nameof(ExternalUserInfo.ProviderKey)} field is required." }, problemDetails.Errors[nameof(ExternalUserInfo.ProviderKey)]);
+        Assert.Equal(new[] { $"The {nameof(ExternalUserInfo.KeyProvider)} field is required." }, problemDetails.Errors[nameof(ExternalUserInfo.KeyProvider)]);
 
-        response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { ProviderKey = "somekey" });
+        response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { KeyProvider = "somekey" });
         problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -111,7 +109,7 @@ public class UserApiTests
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
         var client = application.CreateClient();
-        var response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { Username = "todouser", ProviderKey = "1003" });
+        var response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { Username = "todouser", KeyProvider = "1003" });
         var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
 
         Assert.True(response.IsSuccessStatusCode);

@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Web.Server.Todos;
+using Todo.Web.Shared.SharedClasses;
 using Xunit;
 
 namespace Todo.Tests.ApiTests;
