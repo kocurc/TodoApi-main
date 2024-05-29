@@ -61,6 +61,7 @@ public class Program
 #if DEBUG
         // UseWebAssemblyDebugging - Adds middleware that enables debugging of Blazor WebAssembly application, like adding a breakpoint in the code or inspect variables
         webApplication.UseWebAssemblyDebugging();
+        //---------
         // UseSwagger - Adds middleware that generates Swagger docume
         webApplication.UseSwagger();
         webApplication.UseSwaggerUI();
