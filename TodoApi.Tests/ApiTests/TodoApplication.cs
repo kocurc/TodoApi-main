@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +16,6 @@ using Todo.Tests.Extensions;
 using Todo.Web.Server;
 using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Database;
-using Todo.Web.Server.Users;
 using Xunit;
 
 namespace Todo.Tests.ApiTests;
@@ -38,8 +36,8 @@ public class TodoApplication : WebApplicationFactory<Program>
     public async Task CreateUserAsync(string username, string? password = null)
     {
         using var scope = Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TodoUser>>();
-        var newUser = new TodoUser { UserName = username };
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var newUser = new IdentityUser { UserName = username };
         var result = await userManager.CreateAsync(newUser, password ?? Guid.NewGuid().ToString());
 
         Assert.True(result.Succeeded);

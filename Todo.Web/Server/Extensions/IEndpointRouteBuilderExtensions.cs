@@ -3,12 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Yarp.ReverseProxy.Forwarder;
-using Yarp.ReverseProxy.Transforms;
-using Yarp.ReverseProxy.Transforms.Builder;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Todo.Web.Server.Authentication;
@@ -16,7 +11,6 @@ using Todo.Web.Server.Database;
 using CurrentUser = Todo.Web.Server.Authorization.CurrentUser;
 using Todo.Web.Shared.SharedClasses;
 using Microsoft.AspNetCore.Identity;
-using Todo.Web.Server.Users;
 using AuthenticationToken = Todo.Web.Shared.SharedClasses.AuthenticationToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
@@ -91,9 +85,9 @@ public static class IEndpointRouteBuilderExtensions
 
         _ = group.WithTags("Users");
         _ = group.WithParameterValidation(typeof(UserInfo), typeof(ExternalUserInfo));
-        _ = group.MapPost("/", async Task<Results<Ok, ValidationProblem>> (UserInfo newUser, UserManager<TodoUser> userManager) =>
+        _ = group.MapPost("/", async Task<Results<Ok, ValidationProblem>> (UserInfo newUser, UserManager<IdentityUser> userManager) =>
         {
-            var result = await userManager.CreateAsync(new TodoUser { UserName = newUser.Username }, newUser.Password);
+            var result = await userManager.CreateAsync(new IdentityUser { UserName = newUser.Username }, newUser.Password);
 
             if (result.Succeeded)
             {
@@ -102,7 +96,7 @@ public static class IEndpointRouteBuilderExtensions
 
             return TypedResults.ValidationProblem(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
         });
-        _ = group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        _ = group.MapPost("/token", async Task<Results<BadRequest, Ok<AuthenticationToken>>> (UserInfo userInfo, UserManager<IdentityUser> userManager, ITokenService tokenService) =>
         {
             var user = await userManager.FindByNameAsync(userInfo.Username);
 
@@ -113,7 +107,7 @@ public static class IEndpointRouteBuilderExtensions
 
             return TypedResults.Ok(new AuthenticationToken(tokenService.GenerateToken(user.UserName!)));
         });
-        _ = group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<TodoUser> userManager, ITokenService tokenService) =>
+        _ = group.MapPost("/token/{provider}", async Task<Results<Ok<AuthenticationToken>, ValidationProblem>> (string provider, ExternalUserInfo userInfo, UserManager<IdentityUser> userManager, ITokenService tokenService) =>
         {
             var user = await userManager.FindByLoginAsync(provider, userInfo.KeyProvider);
 
@@ -121,7 +115,7 @@ public static class IEndpointRouteBuilderExtensions
 
             if (user is null)
             {
-                user = new TodoUser() { UserName = userInfo.Username };
+                user = new IdentityUser() { UserName = userInfo.Username };
 
                 result = await userManager.CreateAsync(user);
 
@@ -146,14 +140,14 @@ public static class IEndpointRouteBuilderExtensions
     {
         var group = routes.MapGroup("/auth");
 
-        _ = group.MapPost("register", async (UserInfo userInfo, AuthClient client) =>
+        _ = group.MapPost("register", async (UserInfo userInfo, UserAuthenticationClient client) =>
         {
             var token = await client.CreateUserAsync(userInfo);
 
             return token is null ? Results.Unauthorized() : SignIn(userInfo, token);
         });
 
-        _ = group.MapPost("login", async (UserInfo userInfo, AuthClient client) =>
+        _ = group.MapPost("login", async (UserInfo userInfo, UserAuthenticationClient client) =>
         {
             var token = await client.GetTokenAsync(userInfo);
 
@@ -170,7 +164,7 @@ public static class IEndpointRouteBuilderExtensions
             properties: new AuthenticationProperties { RedirectUri = $"/auth/signin/{provider}" },
             authenticationSchemes: [provider]));
 
-        _ = group.MapGet("signin/{provider}", async (string provider, AuthClient client, HttpContext context) =>
+        _ = group.MapGet("signin/{provider}", async (string provider, UserAuthenticationClient client, HttpContext context) =>
         {
             var result = await context.AuthenticateAsync(AuthenticationSchemes.ExternalScheme);
 

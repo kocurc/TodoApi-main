@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Todo.Web.Server.Authentication;
+using Todo.Web.Server.Authorization;
 using Todo.Web.Server.Database;
 using Todo.Web.Server.Extensions;
-using Todo.Web.Server.Users;
 
 namespace Todo.Web.Server;
 
@@ -40,16 +41,27 @@ public class Program
         // Enable API Explorer for OpenAPI documentation for the endpoints defined in your application using the Map methods, like MapPost in the IEndpointRouteBuilder interface
         webApplicationBuilder.Services.AddEndpointsApiExplorer();
 
-        //----------------------------------------------------------
-        webApplicationBuilder.Services.AddIdentityCore<TodoUser>().AddEntityFrameworkStores<TodoDbContext>();
-        webApplicationBuilder.Services.AddCurrentUser();
-        webApplicationBuilder.Services.AddHttpClient();
-        webApplicationBuilder.Services.AddScoped<AuthClient>();
+        // AddIdentityCore - Add the core identity services to the Dependency Injection container that support UI login functionalities
+        // AddEntityFrameworkStores - Adds Entity Framework stores for user data storing. TodoDbContext is DbContext that will interact with the database
+        webApplicationBuilder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<TodoDbContext>();
 
+        // ADD SCOPED SERVICES. NEW INSTANCE IS CREATED FOR EVERY REQUEST
+        // UserAuthenticationClient - Service that handles the user authentication Tasks
+        webApplicationBuilder.Services.AddScoped<UserAuthenticationClient>();
+        // CurrentUser - Service that holds the current user information
+        webApplicationBuilder.Services.AddScoped<CurrentUser>();
+        // ClaimsTransformation - Service that provides a way to apply custom logic to a user's claims after they have been authenticated
+        webApplicationBuilder.Services.AddScoped<IClaimsTransformation, ClaimsTransformation>();
+        // Registers IHttpClientFactory that handles HttpClient instances. HttpClient is used to send HTTP requests and receive HTTP responses
+        webApplicationBuilder.Services.AddHttpClient();
+
+        // Build method creates a WebApplication object, which represents configured web application and its services. Later you can set up middleware - Use... and Map... methods to configure the application's request pipeline
         var webApplication = webApplicationBuilder.Build();
 
 #if DEBUG
+        // UseWebAssemblyDebugging - Adds middleware that enables debugging of Blazor WebAssembly application, like adding a breakpoint in the code or inspect variables
         webApplication.UseWebAssemblyDebugging();
+        // UseSwagger - Adds middleware that generates Swagger docume
         webApplication.UseSwagger();
         webApplication.UseSwaggerUI();
 #else

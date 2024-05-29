@@ -7,7 +7,7 @@ using ExternalUserInfo = Todo.Web.Shared.SharedClasses.ExternalUserInfo;
 
 namespace Todo.Web.Server.Authentication;
 
-public class AuthClient(HttpClient client)
+public class UserAuthenticationClient(HttpClient client)
 {
     public async Task<string?> GetTokenAsync(UserInfo userInfo)
     {

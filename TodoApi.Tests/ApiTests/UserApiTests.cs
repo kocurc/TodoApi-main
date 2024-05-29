@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Web.Server.Users;
 using Todo.Web.Shared.SharedClasses;
 using Xunit;
 
@@ -121,7 +120,7 @@ public class UserApiTests
         response = await client.SendAsync(req);
 
         using var scope = application.Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TodoUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var user = await userManager.FindByLoginAsync("Google", "1003");
 
         Assert.True(response.IsSuccessStatusCode);

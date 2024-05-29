@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
-using Todo.Web.Server.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace Todo.Web.Server.Authorization;
 
 public class CurrentUser
 {
-    public TodoUser? User { get; set; }
+    public IdentityUser? User { get; set; }
 
     public ClaimsPrincipal Principal { get; set; } = default!;
 
