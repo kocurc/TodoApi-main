@@ -1,3 +1,3 @@
-namespace Todo.Web.Shared.SharedClasses;
+namespace Todo.Web.Shared.Models;
 
 public record AuthenticationToken(string Token);

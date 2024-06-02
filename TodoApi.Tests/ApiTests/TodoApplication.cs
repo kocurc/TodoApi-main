@@ -97,6 +97,7 @@ public class TodoApplication : WebApplicationFactory<Program>
     protected override void Dispose(bool disposing)
     {
         _sqliteConnection.Dispose();
+
         base.Dispose(disposing);
     }
 

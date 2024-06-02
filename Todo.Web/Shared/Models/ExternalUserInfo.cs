@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Todo.Web.Shared.SharedClasses;
+namespace Todo.Web.Shared.Models;
 
 public class ExternalUserInfo
 {

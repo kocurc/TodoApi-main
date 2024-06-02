@@ -1,3 +1,4 @@
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,8 @@ using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Authorization;
 using Todo.Web.Server.Database;
 using Todo.Web.Server.Extensions;
+using Todo.Web.Server.Services;
+using AuthenticationService = Todo.Web.Server.Services.AuthenticationService;
 
 namespace Todo.Web.Server;
 
@@ -19,19 +22,27 @@ public class Program
         var webApplicationBuilder = WebApplication.CreateBuilder(args);
         var databaseConnectionString = webApplicationBuilder.Configuration.GetConnectionString("SQLiteConnectionString") ?? "Data Source=.db/IEndpointRouteBuilderExtensions.db";
 
+        webApplicationBuilder.Services.AddControllers();
+
         // ADD SERVICES TO THE APPLICATION
         // Configures who you are
         webApplicationBuilder.AddAuthentication();
         // Configures logging, distributed tracing and scraping metrics, for instance using Prometheus
         webApplicationBuilder.AddOpenTelemetry();
         // Adds service that can generate Swagger documents for your API. InferSecuritySchemes infers the security schemes from the authorization policies - JWT Bearer in this case
-        webApplicationBuilder.AddSwaggerGen();
+        webApplicationBuilder.Services.AddSwaggerGen(swaggerGenOptions => swaggerGenOptions.InferSecuritySchemes());
         // Configures what you can do
         webApplicationBuilder.Services.AddAuthorizationBuilder().AddCurrentUserHandler();
         // Use SQLLite as the database
         webApplicationBuilder.Services.AddSqlite<TodoDbContext>(databaseConnectionString);
         // Add support for Razor C#-HTML pages
         webApplicationBuilder.Services.AddRazorPages();
+
+        // ???
+        webApplicationBuilder.Services.AddControllersWithViews();
+        webApplicationBuilder.Services.AddServerSideBlazor();
+        // ???
+
         // Adds per-user rate limiting to the application, with a limit of 100 requests every 10 seconds
         webApplicationBuilder.Services.AddRateLimiting();
 
@@ -55,20 +66,26 @@ public class Program
         // Registers IHttpClientFactory that handles HttpClient instances. HttpClient is used to send HTTP requests and receive HTTP responses
         webApplicationBuilder.Services.AddHttpClient();
 
+
+        // ???
+        webApplicationBuilder.Services.AddScoped<TodoService>();
+        webApplicationBuilder.Services.AddScoped<AuthenticationService>();
+        webApplicationBuilder.Services.AddScoped<UserService>();
+        // ???
+
         // Build method creates a WebApplication object, which represents configured web application and its services. Later you can set up middleware - Use... and Map... methods to configure the application's request pipeline
         var webApplication = webApplicationBuilder.Build();
 
 #if DEBUG
         // UseWebAssemblyDebugging - Adds middleware that enables debugging of Blazor WebAssembly application, like adding a breakpoint in the code or inspect variables
         webApplication.UseWebAssemblyDebugging();
-        //---------
-        // UseSwagger - Adds middleware that generates Swagger docume
+
+        // ???
         webApplication.UseSwagger();
         webApplication.UseSwaggerUI();
 #else
-            webApplication.UseHsts();
+        webApplication.UseHsts();
 #endif
-
         webApplication.UseHttpsRedirection();
         webApplication.UseBlazorFrameworkFiles();
         webApplication.UseStaticFiles();
@@ -77,14 +94,12 @@ public class Program
         webApplication.UseAuthorization();
         webApplication.MapFallbackToPage("/_Host");
         webApplication.MapPrometheusScrapingEndpoint();
-        webApplication.MapAuth();
-        webApplication.MapTodos();
-        webApplication.MapUsers();
         webApplication.UseRateLimiter();
         webApplication.UseSecurityHeadersPolicies();
-        ////----------------------------------------------------------
-
-        // Run the application
+        webApplication.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
         webApplication.Run();
     }
 }

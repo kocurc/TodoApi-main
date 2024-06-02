@@ -6,11 +6,11 @@ namespace Todo.Web.Server.Database;
 
 public class TodoDbContext(DbContextOptions<TodoDbContext> options) : IdentityDbContext<IdentityUser>(options)
 {
-    public DbSet<Todos.Todo> Todos => Set<Todos.Todo>();
+    public DbSet<Shared.Models.Todo> Todos => Set<Shared.Models.Todo>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Todos.Todo>()
+        builder.Entity<Shared.Models.Todo>()
             .HasOne<IdentityUser>()
             .WithMany()
             .HasForeignKey(t => t.OwnerId)

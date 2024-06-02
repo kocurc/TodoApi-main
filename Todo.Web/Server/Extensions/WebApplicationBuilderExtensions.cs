@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -20,23 +19,6 @@ namespace Todo.Web.Server.Extensions;
 public static class WebApplicationBuilderExtensions
 {
     private delegate void ExternalAuthenticationProvider(AuthenticationBuilder authenticationBuilder, Action<object> configure);
-
-    public static WebApplicationBuilder AddSwaggerGen(this WebApplicationBuilder webApplicationBuilder)
-    {
-        webApplicationBuilder.Services.AddSwaggerGen(swaggerGenOptions =>
-        {
-            swaggerGenOptions.InferSecuritySchemes();
-            swaggerGenOptions.SwaggerDoc(name: "Swagger TodoApi documentation",
-                info: new OpenApiInfo
-                {
-                    Title = "TodoApi API documentation",
-                    Version = "v1",
-                    Description = "Full TodoApi API documentation"
-                });
-        });
-
-        return webApplicationBuilder;
-    }
 
     public static WebApplicationBuilder AddAuthentication(this WebApplicationBuilder builder)
     {
@@ -59,27 +41,29 @@ public static class WebApplicationBuilderExtensions
         {
             var section = builder.Configuration.GetSection($"Authentication:Schemes:{providerName}");
 
-            if (section.Exists())
+            if (!section.Exists())
             {
-                provider(authenticationBuilder, options =>
-                {
-                    section.Bind(options);
+                continue;
+            }
 
-                    switch (options)
-                    {
-                        case RemoteAuthenticationOptions remoteAuthenticationOptions:
-                            remoteAuthenticationOptions.SignInScheme = AuthenticationSchemes.ExternalScheme;
-                            break;
-                        case Auth0WebAppOptions auth0WebAppOptions:
-                            auth0WebAppOptions.SkipCookieMiddleware = true;
-                            break;
-                    }
-                });
+            provider(authenticationBuilder, options =>
+            {
+                section.Bind(options);
 
-                if (providerName is "Auth0")
+                switch (options)
                 {
-                    SetAuth0SignInScheme(builder);
+                    case RemoteAuthenticationOptions remoteAuthenticationOptions:
+                        remoteAuthenticationOptions.SignInScheme = AuthenticationSchemes.ExternalScheme;
+                        break;
+                    case Auth0WebAppOptions auth0WebAppOptions:
+                        auth0WebAppOptions.SkipCookieMiddleware = true;
+                        break;
                 }
+            });
+
+            if (providerName is "Auth0")
+            {
+                SetAuth0SignInScheme(builder);
             }
         }
 

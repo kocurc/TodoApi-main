@@ -1,10 +1,10 @@
-﻿using Todo.Web.Shared.SharedClasses;
+﻿using Todo.Web.Shared.Models;
 
 namespace Todo.Web.Server.Extensions;
 
 public static class TodoExtensions
 {
-    public static TodoItem AsTodoItem(this Todos.Todo todo)
+    public static TodoItem AsTodoItem(this Shared.Models.Todo todo)
     {
         return new TodoItem
         {

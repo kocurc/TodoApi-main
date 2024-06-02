@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Web.Shared.SharedClasses;
+using Todo.Web.Shared.Models;
 using Xunit;
 
 namespace Todo.Tests.ApiTests;
@@ -36,6 +36,7 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users", new UserInfo { Username = "todouser", Password = "" });
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
@@ -61,6 +62,7 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token/Google", new ExternalUserInfo { Username = "todouser" });
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
@@ -86,7 +88,9 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync("todouser", "p@assw0rd1");
+
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token", new UserInfo { Username = "todouser", Password = "p@assw0rd1" });
         var token = await response.Content.ReadFromJsonAsync<AuthenticationToken>();
@@ -133,7 +137,9 @@ public class UserApiTests
     {
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync("todouser", "p@assw0rd1");
+
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/users/token", new UserInfo { Username = "todouser", Password = "prd1" });
 

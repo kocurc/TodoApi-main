@@ -1,9 +1,9 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Todo.Web.Shared.SharedClasses;
-using AuthenticationToken = Todo.Web.Shared.SharedClasses.AuthenticationToken;
-using ExternalUserInfo = Todo.Web.Shared.SharedClasses.ExternalUserInfo;
+using Todo.Web.Shared.Models;
+using AuthenticationToken = Todo.Web.Shared.Models.AuthenticationToken;
+using ExternalUserInfo = Todo.Web.Shared.Models.ExternalUserInfo;
 
 namespace Todo.Web.Server.Authentication;
 

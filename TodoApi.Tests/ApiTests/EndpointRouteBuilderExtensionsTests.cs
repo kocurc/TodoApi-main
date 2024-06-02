@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Todo.Web.Shared.SharedClasses;
+using Todo.Web.Shared.Models;
 using Xunit;
 
 namespace Todo.Tests.ApiTests;
@@ -19,7 +19,7 @@ public class EndpointRouteBuilderExtensionsTests
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "Thing one I have to do", OwnerId = userId });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "Thing one I have to do", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -37,8 +37,10 @@ public class EndpointRouteBuilderExtensionsTests
     public async Task GetTodosWithoutDbUser()
     {
         const string userId = "34";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         var client = application.CreateClient(userId);
         var response = await client.GetAsync("/todos");
 
@@ -49,6 +51,7 @@ public class EndpointRouteBuilderExtensionsTests
     public async Task PostTodos()
     {
         const string userId = "34";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
 
@@ -73,11 +76,12 @@ public class EndpointRouteBuilderExtensionsTests
     public async Task DeleteTodos()
     {
         const string userId = "34";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -102,12 +106,14 @@ public class EndpointRouteBuilderExtensionsTests
     {
         const string userId0 = "34";
         const string userId1 = "35";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync(userId0);
         await application.CreateUserAsync(userId1);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
 
         await db.SaveChangesAsync();
 
@@ -163,12 +169,14 @@ public class EndpointRouteBuilderExtensionsTests
     {
         const string userId0 = "34";
         const string userId1 = "35";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync(userId0);
         await application.CreateUserAsync(userId1);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId0 });
 
         await db.SaveChangesAsync();
 
@@ -199,12 +207,14 @@ public class EndpointRouteBuilderExtensionsTests
     {
         const string userId = "34";
         const string adminUserId = "35";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync(userId);
         await application.CreateUserAsync(adminUserId);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 
@@ -231,11 +241,13 @@ public class EndpointRouteBuilderExtensionsTests
     {
         const string ownerId = "34";
         const string userId = "34";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync(userId);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = ownerId });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = ownerId });
 
         await db.SaveChangesAsync();
 
@@ -267,12 +279,14 @@ public class EndpointRouteBuilderExtensionsTests
     {
         const string userId = "34";
         const string adminUserId = "35";
+
         await using var application = new TodoApplication();
         await using var db = application.CreateTodoDbContext();
+
         await application.CreateUserAsync(userId);
         await application.CreateUserAsync(adminUserId);
 
-        db.Todos.Add(new Todo.Web.Server.Todos.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
+        db.Todos.Add(new Web.Shared.Models.Todo { Title = "I want to do this thing tomorrow", OwnerId = userId });
 
         await db.SaveChangesAsync();
 

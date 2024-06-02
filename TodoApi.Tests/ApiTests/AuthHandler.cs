@@ -10,6 +10,7 @@ public sealed class AuthHandler(Action<HttpRequestMessage> onRequest) : Delegati
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         onRequest(request);
+
         return base.SendAsync(request, cancellationToken);
     }
 }

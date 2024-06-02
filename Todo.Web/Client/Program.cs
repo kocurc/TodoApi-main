@@ -17,6 +17,7 @@ public class Program
             client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
             client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
         });
+
         builder.Services.AddSingleton<HtmlSanitizer>();
 
         await builder.Build().RunAsync();
