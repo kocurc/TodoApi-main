@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Todo.Web.Server.Authentication;
 using Todo.Web.Shared.Models;
 
 namespace Todo.Web.Server.Services;
 
-public class AuthenticationService(UserAuthenticationClient client)
+public class AuthenticationService(AuthenticationApiService client)
 {
     public async Task<string?> RegisterUserAsync(UserInfo userInfo)
     {

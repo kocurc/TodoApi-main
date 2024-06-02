@@ -5,9 +5,9 @@ using Todo.Web.Shared.Models;
 using AuthenticationToken = Todo.Web.Shared.Models.AuthenticationToken;
 using ExternalUserInfo = Todo.Web.Shared.Models.ExternalUserInfo;
 
-namespace Todo.Web.Server.Authentication;
+namespace Todo.Web.Server.Services;
 
-public class UserAuthenticationClient(HttpClient client)
+public class AuthenticationApiService(HttpClient client)
 {
     public async Task<string?> GetTokenAsync(UserInfo userInfo)
     {

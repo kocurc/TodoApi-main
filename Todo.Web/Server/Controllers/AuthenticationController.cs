@@ -55,7 +55,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
 
             if (token is not null)
             {
-                return SignIn(id, name, token, provider); // Return the SignIn result directly
+                return SignIn(id, name, token, provider);
             }
         }
 
