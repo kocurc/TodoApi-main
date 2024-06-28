@@ -14,12 +14,14 @@ public class UsersController(UserService userService) : ControllerBase
     public async Task<ActionResult> CreateUser([FromBody] UserInfo newUser)
     {
         var result = await userService.CreateUserAsync(newUser);
+
         if (result.Succeeded)
         {
             return Ok();
         }
 
         var validationProblemDetails = new ValidationProblemDetails(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
+
         return ValidationProblem(validationProblemDetails);
     }
 
@@ -27,6 +29,7 @@ public class UsersController(UserService userService) : ControllerBase
     public async Task<ActionResult<AuthenticationToken>> GenerateToken([FromBody] UserInfo userInfo)
     {
         var token = await userService.GenerateTokenAsync(userInfo);
+
         if (token != null)
         {
             return Ok(token);
@@ -39,12 +42,14 @@ public class UsersController(UserService userService) : ControllerBase
     public async Task<ActionResult<AuthenticationToken>> GenerateExternalToken(string provider, [FromBody] ExternalUserInfo userInfo)
     {
         var (token, result) = await userService.GenerateExternalTokenAsync(provider, userInfo);
+
         if (token != null)
         {
             return Ok(token);
         }
 
         var validationProblemDetails = new ValidationProblemDetails(result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description }));
+
         return ValidationProblem(validationProblemDetails);
     }
 }

@@ -17,6 +17,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
     public async Task<IActionResult> RegisterUser([FromBody] UserInfo userInfo)
     {
         var token = await authService.RegisterUserAsync(userInfo);
+
         return token is null ? Unauthorized() : SignIn(userInfo, token);
     }
 
@@ -24,6 +25,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
     public async Task<IActionResult> LoginUser([FromBody] UserInfo userInfo)
     {
         var token = await authService.LoginUserAsync(userInfo);
+
         return token is null ? Unauthorized() : SignIn(userInfo, token);
     }
 
@@ -32,6 +34,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
     public async Task<IActionResult> LogoutUser()
     {
         await authService.LogoutUserAsync(HttpContext);
+
         return Ok();
     }
 
@@ -39,6 +42,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
     public IActionResult ExternalLogin(string provider)
     {
         var properties = new AuthenticationProperties { RedirectUri = $"/api/auth/signin/{provider}" };
+
         return Challenge(properties, provider);
     }
 
@@ -46,6 +50,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
     public async Task<IActionResult> ExternalSignIn(string provider)
     {
         var result = await HttpContext.AuthenticateAsync("ExternalScheme");
+
         if (result.Succeeded)
         {
             var principal = result.Principal;
@@ -60,6 +65,7 @@ public class AuthenticationController(AuthenticationService authService) : Contr
         }
 
         await HttpContext.SignOutAsync("ExternalScheme");
+
         return Redirect("/");
     }
 

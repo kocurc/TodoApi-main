@@ -17,6 +17,7 @@ public class TodosController(TodoService todoService, CurrentUser currentUser) :
     public async Task<ActionResult<List<TodoItem>>> GetTodos()
     {
         var todos = await todoService.GetTodosAsync(currentUser);
+
         return Ok(todos);
     }
 
@@ -24,10 +25,12 @@ public class TodosController(TodoService todoService, CurrentUser currentUser) :
     public async Task<ActionResult<TodoItem>> GetTodoById(int id)
     {
         var todo = await todoService.GetTodoByIdAsync(id, currentUser);
+
         if (todo == null)
         {
             return NotFound();
         }
+
         return Ok(todo);
     }
 
@@ -35,6 +38,7 @@ public class TodosController(TodoService todoService, CurrentUser currentUser) :
     public async Task<ActionResult<TodoItem>> CreateTodo([FromBody] TodoItem newTodo)
     {
         var todo = await todoService.CreateTodoAsync(newTodo, currentUser);
+
         return CreatedAtAction(nameof(GetTodoById), new { id = todo.Id }, todo);
     }
 
@@ -45,7 +49,8 @@ public class TodosController(TodoService todoService, CurrentUser currentUser) :
         {
             return NotFound();
         }
-        return Ok();
+
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")]
@@ -55,6 +60,7 @@ public class TodosController(TodoService todoService, CurrentUser currentUser) :
         {
             return NotFound();
         }
-        return Ok();
+
+        return NoContent();
     }
 }

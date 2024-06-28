@@ -5,6 +5,7 @@
     <ContainerImageTag>latest</ContainerImageTag>
     <UserSecretsId>c3677e8f-17d8-492d-8844-36ade85166e5</UserSecretsId>
     <ImplicitUsings>disable</ImplicitUsings>
+	<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <ItemGroup>

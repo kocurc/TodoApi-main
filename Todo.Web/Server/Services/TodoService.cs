@@ -23,6 +23,7 @@ public class TodoService(TodoDbContext dbContext)
     public async Task<TodoItem?> GetTodoByIdAsync(int id, CurrentUser owner)
     {
         var todo = await dbContext.Todos.FindAsync(id);
+
         if (todo != null && (todo.OwnerId == owner.Id || owner.IsAdmin))
         {
             return todo.AsTodoItem();
@@ -39,6 +40,7 @@ public class TodoService(TodoDbContext dbContext)
         };
 
         dbContext.Todos.Add(todo);
+
         await dbContext.SaveChangesAsync();
 
         return todo.AsTodoItem();

@@ -25,7 +25,7 @@ public class AuthenticationApiService(HttpClient client)
 
     public async Task<string?> CreateUserAsync(UserInfo userInfo)
     {
-        var response = await client.PostAsJsonAsync("users", userInfo);
+        var response = await client.PostAsJsonAsync("auth/register", userInfo);
 
         if (!response.IsSuccessStatusCode)
         {
