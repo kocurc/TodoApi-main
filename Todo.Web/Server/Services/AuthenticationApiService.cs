@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Todo.Web.Shared.Models;
@@ -7,11 +8,18 @@ using ExternalUserInfo = Todo.Web.Shared.Models.ExternalUserInfo;
 
 namespace Todo.Web.Server.Services;
 
-public class AuthenticationApiService(HttpClient client)
+public class AuthenticationApiService
 {
+    private readonly HttpClient _client;
+
+    public AuthenticationApiService(HttpClient client)
+    {
+        _client = client;
+    }
+
     public async Task<string?> GetTokenAsync(UserInfo userInfo)
     {
-        var response = await client.PostAsJsonAsync("users/token", userInfo);
+        var response = await _client.PostAsJsonAsync("users/token", userInfo);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -25,19 +33,31 @@ public class AuthenticationApiService(HttpClient client)
 
     public async Task<string?> CreateUserAsync(UserInfo userInfo)
     {
-        var response = await client.PostAsJsonAsync("auth/register", userInfo);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            return null;
-        }
+            Console.WriteLine("Starting register request...");
+            var response = await _client.PostAsJsonAsync("authentication/register", userInfo);
+            Console.WriteLine("Register request sent.");
 
-        return await GetTokenAsync(userInfo);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Register request failed.");
+                return null;
+            }
+
+            Console.WriteLine("Register request succeeded, getting token...");
+            return await GetTokenAsync(userInfo);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<string?> GetOrCreateUserAsync(string provider, ExternalUserInfo userInfo)
     {
-        var response = await client.PostAsJsonAsync($"users/token/{provider}", userInfo);
+        var response = await _client.PostAsJsonAsync($"users/token/{provider}", userInfo);
 
         if (!response.IsSuccessStatusCode)
         {

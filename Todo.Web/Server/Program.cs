@@ -1,3 +1,5 @@
+using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +9,6 @@ using Todo.Web.Server.Authentication;
 using Todo.Web.Server.Authorization;
 using Todo.Web.Server.Database;
 using Todo.Web.Server.Extensions;
-using Todo.Web.Server.Middleware;
 using Todo.Web.Server.Services;
 using AuthenticationService = Todo.Web.Server.Services.AuthenticationService;
 
@@ -68,7 +69,17 @@ public class Program
         webApplicationBuilder.Services.AddScoped<IClaimsTransformation, ClaimsTransformation>();
         // Registers IHttpClientFactory that handles HttpClient instances.
         // HttpClient is used to send HTTP requests and receive HTTP responses
-        webApplicationBuilder.Services.AddHttpClient();
+        webApplicationBuilder.Services.AddHttpClient<AuthenticationApiService>(client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:7123/");
+            client.Timeout = TimeSpan.FromSeconds(2);
+        }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+        {
+            Proxy = null,
+            UseProxy = false,
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
         // ADD TRANSIENT SERVICES. A NEW INSTANCE IS CREATED EVERY TIME THE SERVICE IS REQUESTED
         // NONE FOR NOW
         // Build method creates a WebApplication object, which represents configured web application and its services.
@@ -106,7 +117,8 @@ public class Program
         webApplication.UseRouting();
         // UseMiddleware - This middleware adds a custom MethodBlockingMiddleware middleware to your application
         // that blocks all requests that are not approved by a specific endpoint
-        webApplication.UseMiddleware<MethodBlockingMiddleware>();
+        // TODO : Uncomment this line to enable the MethodBlockingMiddleware - It does not work with the current implementation
+        // webApplication.UseMiddleware<MethodBlockingMiddleware>();
         // This middleware enables authentication in your application.
         // It sets the User property of the HttpContext with the appropriate ClaimsPrincipal.
         // ClaimsPrincipal is an object that represents the user's identity and contains the user's claims
