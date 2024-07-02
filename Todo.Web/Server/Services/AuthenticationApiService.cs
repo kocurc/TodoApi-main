@@ -36,7 +36,7 @@ public class AuthenticationApiService
         try
         {
             Console.WriteLine("Starting register request...");
-            var response = await _client.PostAsJsonAsync("authentication/register", userInfo);
+            var response = await _client.PostAsJsonAsync("users", userInfo);
             Console.WriteLine("Register request sent.");
 
             if (!response.IsSuccessStatusCode)
