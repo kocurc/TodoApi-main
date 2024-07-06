@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Language.Flow;
 
-namespace TodoApi.Tests.Builders;
+namespace Todo.Tests.Builders;
 
 public class HttpClientMockBuilder
 {

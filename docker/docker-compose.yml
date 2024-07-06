@@ -3,7 +3,7 @@ version: '3.8'
 
 configs:
   prometheus_config:
-    file: ./TodoApi/prometheus.yml
+    file: ./Todo.Web/Server/prometheus.yml
 
 x-common-variables: &common-variables
    ASPNETCORE_ENVIRONMENT: Development

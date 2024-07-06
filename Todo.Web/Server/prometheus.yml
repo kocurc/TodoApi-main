@@ -1,0 +1,22 @@
+﻿# Prometheus monitoring system configuration file
+# Global - configuration that applies globally across Prometheus.
+global:
+  # Collect metrics from its targets every 15 seconds.
+  scrape_interval: 15s
+  # Evaluate alerting rules every 15 second. Here we are not using alerting rules
+  evaluation_interval: 15s
+
+# Targets Prometheus should collect metrics from
+scrape_configs:
+    # Prometheus server itself. Prometheus can monitor itself and provide metrics about its own operations
+  - job_name: "prometheus"
+    static_configs:
+      # The service has been configured in the docker-compose.yml file from the image: prom/prometheus
+      - targets: ["localhost:9090"]
+
+  - job_name: "todo-web-server"
+    static_configs:
+      # Prometheus running in a Docker container is configured to scrape metrics from a service running on the host machine at port 5002
+      # host.docker.internal is a special DNS name that can be used in Docker containers to refer to the host machine
+      - targets: ["host.docker.internal:5002"]
+  

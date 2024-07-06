@@ -1,10 +1,10 @@
 ﻿@inject TodoClient Client
 
-@if (!string.IsNullOrEmpty(CurrentUser))
+@if (!string.IsNullOrEmpty(CurrentUserName))
 {
     <ul class="nav justify-content-center">
         <li class="nav-item">
-            Logged in as <strong>@CurrentUser</strong>
+            Logged in as <strong>@CurrentUserName</strong>
             <a class="btn btn-primary" role="button" @onclick="@Logout">Logout</a>
         </li>
     </ul>
@@ -18,7 +18,7 @@ else
 
 @code {
     [Parameter] 
-    public string? CurrentUser { get; set; }
+    public string? CurrentUserName { get; set; }
 
     [Parameter]
     public string[] SocialProviders { get; set; } = Array.Empty<string>();
@@ -26,14 +26,14 @@ else
 
     void HandleLogin(string newUsername)
     {
-        CurrentUser = newUsername;
+	    CurrentUserName = newUsername;
     }
 
     async Task Logout()
     {
         if (await Client.LogoutAsync())
         {
-            CurrentUser = null;
+	        CurrentUserName = null;
         }
     }
 }

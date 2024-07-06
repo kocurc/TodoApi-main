@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Todo.Web.Server.Authentication;
 
-public class ExternalProviders
+public class ExternalProviders(IAuthenticationSchemeProvider schemeProvider)
 {
-    private readonly IAuthenticationSchemeProvider _schemeProvider;
     private Task<string[]>? _providerNames;
-
-    public ExternalProviders(IAuthenticationSchemeProvider schemeProvider)
-    {
-        _schemeProvider = schemeProvider;
-    }
 
     public Task<string[]> GetProviderNamesAsync()
     {
@@ -23,23 +17,11 @@ public class ExternalProviders
 
     private async Task<string[]> GetProviderNamesAsyncCore()
     {
-        List<string>? providerNames = null;
+        List<string>? providerNames = [];
+        var schemes = await schemeProvider.GetAllSchemesAsync();
 
-        var schemes = await _schemeProvider.GetAllSchemesAsync();
+        providerNames.AddRange(from scheme in schemes where scheme.Name != CookieAuthenticationDefaults.AuthenticationScheme && scheme.Name != AuthenticationSchemes.ExternalScheme select scheme.Name);
 
-        foreach (var s in schemes)
-        {
-            // We're assuming all schemes that aren't cookies are social
-            if (s.Name == CookieAuthenticationDefaults.AuthenticationScheme ||
-                s.Name == AuthenticationSchemes.ExternalScheme)
-            {
-                continue;
-            }
-
-            providerNames ??= new();
-            providerNames.Add(s.Name);
-        }
-
-        return providerNames?.ToArray() ?? Array.Empty<string>();
+        return providerNames?.ToArray() ?? [];
     }
 }

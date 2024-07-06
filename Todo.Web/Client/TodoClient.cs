@@ -4,20 +4,14 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Ganss.Xss;
-using Todo.Web.Shared;
+using Todo.Web.Shared.Models;
 
 namespace Todo.Web.Client;
 
-public class TodoClient
+public class TodoClient(HttpClient httpClient, HtmlSanitizer htmlSanitizer)
 {
-    private readonly HttpClient _httpClient;
-    private readonly HtmlSanitizer _htmlSanitizer;
-
-    public TodoClient(HttpClient httpClient, HtmlSanitizer htmlSanitizer)
-    {
-        _httpClient = httpClient;
-        _htmlSanitizer = htmlSanitizer;
-    }
+    private readonly HtmlSanitizer _htmlSanitizer = htmlSanitizer;
+    private readonly HttpClient _httpClient = httpClient;
 
     public async Task<TodoItem?> AddTodoAsync(string? title)
     {
@@ -69,7 +63,7 @@ public class TodoClient
         var sanitizedUserName = _htmlSanitizer.Sanitize(userName);
         var sanitizedPassword = _htmlSanitizer.Sanitize(password);
         var userInfo = new UserInfo() { Username = sanitizedUserName, Password = sanitizedPassword };
-        var response = await _httpClient.PostAsJsonAsync("auth/login", userInfo);
+        var response = await _httpClient.PostAsJsonAsync("authentication/login", userInfo);
 
         return response.IsSuccessStatusCode;
     }
@@ -81,13 +75,15 @@ public class TodoClient
             return false;
         }
 
-        var response = await _httpClient.PostAsJsonAsync("auth/register", new UserInfo { Username = username, Password = password });
+        var response = await _httpClient.PostAsJsonAsync("authentication/register", new UserInfo { Username = username, Password = password });
+
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> LogoutAsync()
     {
-        var response = await _httpClient.PostAsync("auth/logout", content: null);
+        var response = await _httpClient.PostAsync("authentication/logout", content: null);
+
         return response.IsSuccessStatusCode;
     }
 }
